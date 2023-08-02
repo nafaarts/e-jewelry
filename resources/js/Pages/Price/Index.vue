@@ -95,7 +95,7 @@ const confirmDelete = (id, date) => {
                             Kategori
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            diubah pada
+                            Terakhir diubah
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Aksi

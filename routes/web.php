@@ -8,6 +8,7 @@ use App\Http\Controllers\JewelryController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SafeBoxController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 use App\Models\Costumer;
 use App\Models\Jewelry;
@@ -45,6 +46,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('service', [ServiceController::class, 'index'])->name('service.index');
+
     Route::resource('employees', EmployeeController::class)->except('show');
     Route::resource('categories', CategoryController::class)->except('show');
     Route::resource('safeboxes', SafeBoxController::class)->except('show');

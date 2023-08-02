@@ -44,21 +44,19 @@ class Jewelry extends Model
         return $this->belongsTo(SafeBox::class);
     }
 
-    // function sellPrice(): float
-    // {
-    //     $pricePerGram   = Price::latest()->first()?->sell ?? 0;
-    //     $totalPrice     = ($this->weight * $this->carat?->rate / 100) * $pricePerGram;
-    //     $totalPrice     += $this->cost;
+    function sellPrice(): float
+    {
+        $totalPrice     = ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
+        $totalPrice     += $this->cost ?? 0;
 
-    //     return $totalPrice;
-    // }
+        return round($totalPrice / 1000) * 1000;
+    }
 
-    // function buyPrice(): float
-    // {
-    //     $pricePerGram   = Price::latest()->first()?->buy ?? 0;
-    //     $totalPrice     = ($this->weight * $this->carat?->rate / 100) * $pricePerGram;
-    //     $totalPrice     += $this->cost;
+    function buyPrice(): float
+    {
+        $totalPrice     = ($this->weight / $this->price->weight) * $this->price->buy_price;
+        $totalPrice     += $this->cost ?? 0;
 
-    //     return $totalPrice;
-    // }
+        return round($totalPrice / 1000) * 1000;
+    }
 }

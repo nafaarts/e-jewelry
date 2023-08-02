@@ -85,19 +85,19 @@ const confirmDelete = (id, name) => {
                             Nama
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Kode Barang
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Status
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Harga Jual
+                            Kategori
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Berat
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kadar
+                        </th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                            Harga Jual
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Ditambah pada
@@ -108,7 +108,7 @@ const confirmDelete = (id, name) => {
                     </tr>
                 </template>
                 <tr v-if="jewelries.data.length == 0">
-                    <td colspan="6" class="px-4 py-14 text-center">
+                    <td colspan="8" class="px-4 py-14 text-center">
                         <p>Tidak ada data!</p>
                     </td>
                 </tr>
@@ -134,16 +134,9 @@ const confirmDelete = (id, name) => {
                                     {{ jewelry.name }}
                                 </div>
                                 <div class="font-normal text-gray-500">
-                                    {{ jewelry.category.name }}
+                                    {{ jewelry.jewelry_code }}
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="px-4 py-2">
-                        <div
-                            class="font-medium text-gray-900 whitespace-nowrap"
-                        >
-                            {{ jewelry.jewelry_code }}
                         </div>
                     </td>
                     <td class="px-4 py-2">
@@ -166,18 +159,27 @@ const confirmDelete = (id, name) => {
                         <div
                             class="font-medium text-gray-900 whitespace-nowrap"
                         >
-                            {{ currencyFormatter.format(jewelry.price) }}
+                            {{ jewelry.category.name }}
                         </div>
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-56 truncate">
-                            {{ jewelry.weight }}
+                            {{ jewelry.weight }} Gram
                         </p>
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-56 truncate">
-                            {{ jewelry.carat.name }} ({{ jewelry.carat.rate }}%)
+                            {{
+                                `${jewelry.price.category} - ${jewelry.price.carat} (${jewelry.price.rate}%)`
+                            }}
                         </p>
+                    </td>
+                    <td class="px-4 py-2">
+                        <div
+                            class="font-medium text-gray-900 whitespace-nowrap"
+                        >
+                            {{ currencyFormatter.format(jewelry.sellPrice) }}
+                        </div>
                     </td>
                     <td class="px-4 py-2">
                         <div class="whitespace-nowrap">

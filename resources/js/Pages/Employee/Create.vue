@@ -9,7 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import FileInput from "@/Components/FileInput.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { useForm } from "@inertiajs/vue3";
-
+import { ref } from "vue";
 import Swal from "sweetalert2";
 import SwalConfig from "@/utils/sweetalert.conf";
 
@@ -31,6 +31,13 @@ const form = useForm({
     is_active: false,
     remarks: "",
 });
+
+const imagePreview = ref("/images/image-placeholder.png");
+const onUpdateImage = (e) => {
+    const file = e.target.files[0];
+    form.photo = file;
+    imagePreview.value = URL.createObjectURL(file);
+};
 
 const onSubmit = () => {
     form.post(route("employees.store"), {
@@ -60,202 +67,238 @@ const onSubmit = () => {
 
         <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8">
             <form @submit.prevent="onSubmit" class="space-y-6">
-                <div>
-                    <InputLabel for="user_code" value="Kode User" />
-                    <TextInput
-                        id="user_code"
-                        type="text"
-                        class="mt-1 block w-full bg-zinc-100"
-                        v-model="form.user_code"
-                        readonly
-                    />
-                    <InputError class="mt-2" :message="form.errors.user_code" />
-                </div>
-
                 <div class="flex flex-col md:flex-row gap-6">
-                    <div class="w-full md:w-1/2 space-y-6">
+                    <div class="w-full md:w-3/4 space-y-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel
+                                        for="user_code"
+                                        value="Kode User"
+                                    />
+                                    <TextInput
+                                        id="user_code"
+                                        type="text"
+                                        class="mt-1 block w-full bg-zinc-100"
+                                        v-model="form.user_code"
+                                        readonly
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.user_code"
+                                    />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel for="name" value="Nama" />
+                                    <TextInput
+                                        id="name"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.name"
+                                        autocomplete="name"
+                                        placeholder="Masukan nama"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.name"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel for="email" value="Email" />
+                                    <TextInput
+                                        id="email"
+                                        type="email"
+                                        class="mt-1 block w-full"
+                                        v-model="form.email"
+                                        autocomplete="email"
+                                        placeholder="Masukan email"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.email"
+                                    />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel
+                                        for="indentity_number"
+                                        value="Nomor Indentitas"
+                                    />
+
+                                    <TextInput
+                                        id="indentity_number"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.indentity_number"
+                                        autocomplete="indentity_number"
+                                        placeholder="Masukan nomor indentitias"
+                                    />
+
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.indentity_number"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel
+                                        for="password"
+                                        value="Password"
+                                    />
+
+                                    <TextInput
+                                        id="password"
+                                        type="password"
+                                        class="mt-1 block w-full"
+                                        v-model="form.password"
+                                        placeholder="Masukan password"
+                                    />
+
+                                    <p
+                                        class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                                    >
+                                        kosongkan jika tidak ingin mengganti
+                                        password.
+                                    </p>
+
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.password"
+                                    />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel
+                                        for="password_confirmation"
+                                        value="Ulangi Password"
+                                    />
+
+                                    <TextInput
+                                        id="password_confirmation"
+                                        type="password"
+                                        class="mt-1 block w-full"
+                                        v-model="form.password_confirmation"
+                                        placeholder="Ulangi password"
+                                    />
+
+                                    <p
+                                        class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                                    >
+                                        kosongkan jika tidak ingin mengganti
+                                        password.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel
+                                        for="phone_number"
+                                        value="Nomor Handphone"
+                                    />
+                                    <TextInput
+                                        id="phone_number"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.phone_number"
+                                        autocomplete="phone_number"
+                                        placeholder="Masukan nomor telepon"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.phone_number"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel for="address" value="Alamat" />
+
+                                    <TextInput
+                                        id="address"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.address"
+                                        autocomplete="address"
+                                        placeholder="Masukan alamat"
+                                    />
+
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.address"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
-                            <InputLabel for="name" value="Nama" />
-                            <TextInput
-                                id="name"
-                                type="text"
-                                class="mt-1 block w-full"
-                                v-model="form.name"
-                                autocomplete="name"
-                                placeholder="Masukan nama"
+                            <InputLabel for="remarks" value="Catatan" />
+
+                            <TextareaInput
+                                id="remarks"
+                                name="remarks"
+                                v-model="form.remarks"
+                                placeholder="Tinggalkan catatan..."
                             />
                             <InputError
                                 class="mt-2"
-                                :message="form.errors.name"
-                            />
-                        </div>
-                    </div>
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel for="email" value="Email" />
-                            <TextInput
-                                id="email"
-                                type="email"
-                                class="mt-1 block w-full"
-                                v-model="form.email"
-                                autocomplete="email"
-                                placeholder="Masukan email"
-                            />
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.email"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel
-                                for="phone_number"
-                                value="Nomor Handphone"
-                            />
-                            <TextInput
-                                id="phone_number"
-                                type="text"
-                                class="mt-1 block w-full"
-                                v-model="form.phone_number"
-                                autocomplete="phone_number"
-                                placeholder="Masukan nomor telepon"
-                            />
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.phone_number"
+                                :message="form.errors.remarks"
                             />
                         </div>
                     </div>
 
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel
-                                for="indentity_number"
-                                value="Nomor Indentitas"
-                            />
+                    <div class="w-full md:w-1/4">
+                        <InputLabel for="photo" value="Photo" />
 
-                            <TextInput
-                                id="indentity_number"
-                                type="text"
-                                class="mt-1 block w-full"
-                                v-model="form.indentity_number"
-                                autocomplete="indentity_number"
-                                placeholder="Masukan nomor indentitas"
-                            />
+                        <label for="photo" class="block mb-3">
+                            <div class="w-full p-1 border rounded-md">
+                                <img
+                                    :src="imagePreview"
+                                    alt="preview"
+                                    class="w-full"
+                                />
+                            </div>
+                        </label>
 
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.indentity_number"
-                            />
-                        </div>
+                        <FileInput
+                            id="photo"
+                            accept="image/*"
+                            class="mt-1 block w-full"
+                            @input="onUpdateImage"
+                        />
+
+                        <progress
+                            v-if="form.progress"
+                            :value="form.progress.percentage"
+                            max="100"
+                        >
+                            {{ form.progress.percentage }}%
+                        </progress>
+
+                        <p
+                            class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                        >
+                            SVG, PNG, JPG or GIF (MAX. 5MB).
+                        </p>
+
+                        <InputError class="mt-2" :message="form.errors.photo" />
                     </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel for="password" value="Password" />
-
-                            <TextInput
-                                id="password"
-                                type="password"
-                                class="mt-1 block w-full"
-                                v-model="form.password"
-                                placeholder="Masukan password"
-                            />
-
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.password"
-                            />
-                        </div>
-                    </div>
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel
-                                for="password_confirmation"
-                                value="Ulangi Password"
-                            />
-
-                            <TextInput
-                                id="password_confirmation"
-                                type="password"
-                                class="mt-1 block w-full"
-                                v-model="form.password_confirmation"
-                                placeholder="Ulangi password"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel for="address" value="Alamat" />
-
-                            <TextInput
-                                id="address"
-                                type="text"
-                                class="mt-1 block w-full"
-                                v-model="form.address"
-                                autocomplete="address"
-                                placeholder="Masukan alamat"
-                            />
-
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.address"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="w-full md:w-1/2 space-y-6">
-                        <div>
-                            <InputLabel for="photo" value="Photo" />
-
-                            <FileInput
-                                id="photo"
-                                accept="image/*"
-                                class="mt-1 block w-full"
-                                @input="form.photo = $event.target.files[0]"
-                            />
-
-                            <progress
-                                v-if="form.progress"
-                                :value="form.progress.percentage"
-                                max="100"
-                            >
-                                {{ form.progress.percentage }}%
-                            </progress>
-
-                            <p
-                                class="mt-1 text-sm text-gray-500 dark:text-gray-300"
-                            >
-                                SVG, PNG, JPG or GIF (MAX. 800x400px).
-                            </p>
-
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.photo"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <InputLabel for="remarks" value="Catatan" />
-
-                    <TextareaInput
-                        id="remarks"
-                        name="remarks"
-                        v-model="form.remarks"
-                        placeholder="Tinggalkan catatan..."
-                    />
-                    <InputError class="mt-2" :message="form.errors.remarks" />
                 </div>
 
                 <div>

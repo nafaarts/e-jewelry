@@ -242,17 +242,17 @@ const toggleSidebar = () => {
                             class="italic line-through"
                         />
                         <SidebarLink
-                            link="home"
+                            :link="route('service.index')"
                             label="Service"
                             icon="refresh"
-                            class="italic line-through"
+                            :active="route().current('service*')"
                         />
-                        <SidebarLink
+                        <!-- <SidebarLink
                             link="home"
                             label="Titip"
                             icon="handshake"
                             class="italic line-through"
-                        />
+                        /> -->
                         <SidebarLink
                             link="home"
                             label="Tempahan"
