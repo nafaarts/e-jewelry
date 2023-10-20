@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Costumer;
+use App\Models\Jewelry;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,48 +17,61 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::get('/costumer', function (Request $request) {
+        return $request->input('search') ? Costumer::query()
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('costumer_code', 'like', "%{$search}%")
+                    ->orWhere('indentity_number', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->limit(3)
+            ->get() : [];
+    });
+
+    Route::post('/costumer/store', function (Request $request) {
+        $validated = $request->validate([
+            'name' => 'required',
+            'phone_number' => 'required|numeric|unique:' . Costumer::class,
+            'address' => 'required'
+        ]);
+
+        $validated['costumer_code'] = time() . str_pad(Costumer::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+
+        return Costumer::create($validated);
+    });
+
+    Route::get('/jewelry', function (Request $request) {
+        $jewelry = Jewelry::where('jewelry_code', $request->code)->where('status', 'READY')->first();
+
+        if (!$jewelry) {
+            return response()->json([
+                'message' => 'Not Found',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => [
+                'id' => $jewelry->id,
+                'jewelry_code' => $jewelry->jewelry_code,
+                'name' => $jewelry->name,
+                'weight' => $jewelry->weight,
+                'price' => [
+                    'category' => $jewelry->price->category,
+                    'carat' => $jewelry->price->carat,
+                    'rate' => $jewelry->price->rate,
+                ],
+                'sellPrice' => $jewelry->sellPrice(),
+                'photo' => $jewelry->photo
+            ]
+        ]);
+    });
 });
-
-// class Price
-// {
-//     public int $sell;
-//     public int $neutral;
-//     public int $buy;
-//     public string $created_at;
-//     public string $updated_at;
-// }
-
-// Route::get('/prices', function () {
-//     $period = CarbonPeriod::create(now()->parse('1 year ago'), now());
-
-//     $result = collect([]);
-//     $lastIndex = 800000;
-//     $growingValue = 10000;
-//     foreach ($period as $key => $date) {
-//         $data = new Price();
-//         $data->created_at = $date->format('Y-m-d H:i:s');
-//         $data->updated_at = $date->format('Y-m-d H:i:s');
-
-//         if ($key > 100 && $key < 140) {
-//             $lastIndex -= 1500;
-//             $growingValue = 2500;
-//         };
-//         $sellPrice = random_int($lastIndex, $lastIndex += $growingValue);
-
-//         $buyPrice = $sellPrice - ($sellPrice * 11 / 100);
-//         $neutralPrice = ($buyPrice + $sellPrice) / 2;
-
-//         $data->sell = $sellPrice;
-//         $data->buy = $buyPrice;
-//         $data->neutral = $neutralPrice;
-
-//         $result->push($data);
-//     }
-
-//     return $result->whereBetween('created_at', [now()->parse(request('filter') ?? '1 week ago'), now()])->values()->map(function ($item) {
-//         $item->label = now()->create($item->created_at)->format('d-m-y');
-//         return $item;
-//     });
-// });

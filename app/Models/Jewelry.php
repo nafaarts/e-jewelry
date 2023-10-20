@@ -24,27 +24,27 @@ class Jewelry extends Model
         'remarks'
     ];
 
-    function price(): BelongsTo
+    public function price(): BelongsTo
     {
         return $this->belongsTo(Price::class);
     }
 
-    function category(): BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    function supplier(): BelongsTo
+    public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    function safebox(): BelongsTo
+    public function safebox(): BelongsTo
     {
         return $this->belongsTo(SafeBox::class);
     }
 
-    function sellPrice(): float
+    public function sellPrice(): float
     {
         $totalPrice     = ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
         $totalPrice     += $this->cost ?? 0;
@@ -52,7 +52,7 @@ class Jewelry extends Model
         return round($totalPrice / 1000) * 1000;
     }
 
-    function buyPrice(): float
+    public function buyPrice(): float
     {
         $totalPrice     = ($this->weight / $this->price->weight) * $this->price->buy_price;
         $totalPrice     += $this->cost ?? 0;

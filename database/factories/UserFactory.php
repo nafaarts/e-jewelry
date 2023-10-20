@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -17,8 +18,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $employeeCode =  time() . str_pad(User::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
         return [
-            'user_code' => 'U-' . str_pad(random_int(1, 999), 5, '0', STR_PAD_LEFT),
+            'user_code' => $employeeCode,
             'name' => fake()->name(),
             'indentity_number' => fake()->randomNumber(),
             'email' => fake()->unique()->safeEmail(),

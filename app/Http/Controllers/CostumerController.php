@@ -34,7 +34,7 @@ class CostumerController extends Controller
      */
     public function create()
     {
-        $costumerCode =  'S-' . str_pad(Costumer::latest()->first()?->id + 1, 5, '0', STR_PAD_LEFT);
+        $costumerCode =  time() . str_pad(Costumer::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
         return inertia('Costumer/Create', [
             'costumer_code' => $costumerCode
         ]);

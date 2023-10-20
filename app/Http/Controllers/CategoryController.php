@@ -19,7 +19,13 @@ class CategoryController extends Controller
                 })
                 ->latest()
                 ->paginate(10)
-                ->withQueryString(),
+                ->withQueryString()
+                ->through(function ($item) {
+                    return [
+                        ...$item->toArray(),
+                        'amount_of_jewelries' => $item->jewelries->count()
+                    ];
+                }),
             'filters' => $request->only(['search']),
         ]);
     }

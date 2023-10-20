@@ -7,16 +7,16 @@ import { currencyFormatter } from "@/utils/currencyFormatter";
 import moment from "moment";
 
 defineProps({
-    jewelries_count: Number,
-    suppliers_count: Number,
-    employees_count: Number,
-    costumers_count: Number,
-    latest_price: Object,
+    jewelriesCount: Number,
+    suppliersCount: Number,
+    employeesCount: Number,
+    costumersCount: Number,
 });
 </script>
 
 <template>
     <AuthenticatedLayout>
+
         <Head title="Dashboard" />
 
         <template #header>
@@ -28,18 +28,18 @@ defineProps({
         <div class="flex flex-col md:flex-row w-full gap-3">
             <div class="flex gap-3 w-full md:w-1/2">
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Barang">
-                    <h4 class="text-2xl">{{ jewelries_count }}</h4>
+                    <h4 class="text-2xl">{{ jewelriesCount }}</h4>
                 </Card>
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Supplier">
-                    <h4 class="text-2xl">{{ suppliers_count }}</h4>
+                    <h4 class="text-2xl">{{ suppliersCount }}</h4>
                 </Card>
             </div>
             <div class="flex gap-3 w-full md:w-1/2">
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Karyawan">
-                    <h4 class="text-2xl">{{ employees_count }}</h4>
+                    <h4 class="text-2xl">{{ employeesCount }}</h4>
                 </Card>
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Kostumer">
-                    <h4 class="text-2xl">{{ costumers_count }}</h4>
+                    <h4 class="text-2xl">{{ costumersCount }}</h4>
                 </Card>
             </div>
         </div>

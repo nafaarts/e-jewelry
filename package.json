@@ -25,6 +25,7 @@
         "moment": "^2.29.4",
         "sweetalert2": "^11.7.12",
         "v-click-outside": "^3.2.0",
-        "vue-chartjs": "^5.2.0"
+        "vue-chartjs": "^5.2.0",
+        "vue-search-select": "^3.1.2"
     }
 }

@@ -41,7 +41,7 @@ class JewelryController extends Controller
      */
     public function create()
     {
-        $jewelryCode =  'J-' . str_pad(Jewelry::latest()->first()?->id + 1, 5, '0', STR_PAD_LEFT);
+        $jewelryCode =  time() . str_pad(Jewelry::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
         return inertia('Jewelry/Create', [
             'prices' => Price::orderBy('sell_price', 'DESC')->get(),
             'categories' => Category::all(),
@@ -88,6 +88,7 @@ class JewelryController extends Controller
     public function edit(Jewelry $jewelry)
     {
         $jewelry->sellPrice = $jewelry->sellPrice();
+
         return inertia('Jewelry/Edit', [
             'prices' => Price::all(),
             'categories' => Category::all(),

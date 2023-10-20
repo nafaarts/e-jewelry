@@ -33,7 +33,9 @@ class ProfileController extends Controller
         $data = $request->validated();
 
         if ($request->photo) {
-            if ($request->user()->photo) unlink('storage/' . $request->user()->photo);
+            if ($request->user()->photo) {
+                unlink('storage/' . $request->user()->photo);
+            }
 
             $request->file('photo')->store('public/user');
             $data = [
