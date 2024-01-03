@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sale_id')->constrained('sales')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('jewelry_id')->constrained('jewelries')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('jewelry_id')->nullable()->constrained('jewelries')->nullOnDelete();
             $table->integer('price')->default(0);
             $table->timestamps();
         });

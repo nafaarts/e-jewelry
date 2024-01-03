@@ -156,7 +156,8 @@ const toggleSidebar = () => {
                             :active="route().current('sales*')" />
                         <SidebarLink :link="route('services.index')" label="Service" icon="refresh"
                             :active="route().current('services*')" />
-                        <SidebarLink link="home" label="Tempahan" icon="hammer" class="italic line-through" />
+                        <SidebarLink :link="route('orders.index')" label="Tempahan" icon="hammer"
+                            :active="route().current('orders*')" />
                     </ul>
                 </div>
                 <div>

@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CostumerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JewelryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SafeBoxController;
@@ -51,6 +52,10 @@ Route::middleware('auth')->group(function () {
     // Service
     Route::resource('services', ServiceController::class);
 
+    // Orders
+    Route::resource('orders', OrderController::class);
+
+    // Admin
     Route::middleware('can:ADMIN')->group(function () {
         Route::resource('employees', EmployeeController::class)->except('show');
         Route::resource('categories', CategoryController::class)->except('show');

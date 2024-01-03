@@ -19,6 +19,7 @@ class Jewelry extends Model
         'jewelry_code',
         'weight',
         'cost',
+        'is_percent_cost',
         'photo',
         'status',
         'remarks'
@@ -46,8 +47,11 @@ class Jewelry extends Model
 
     public function sellPrice(): float
     {
-        $totalPrice     = ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
-        $totalPrice     += $this->cost ?? 0;
+        $totalPrice     =  ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
+
+        $costInPercent  =  $totalPrice * $this->cost / 100;
+
+        $totalPrice     += $this->is_percent_cost ? $costInPercent : $this->cost;
 
         return round($totalPrice / 1000) * 1000;
     }
@@ -55,7 +59,11 @@ class Jewelry extends Model
     public function buyPrice(): float
     {
         $totalPrice     = ($this->weight / $this->price->weight) * $this->price->buy_price;
-        $totalPrice     += $this->cost ?? 0;
+
+        // if cost not required, remove here!
+        $costInPercent  =  $totalPrice * $this->cost / 100;
+
+        $totalPrice     += $this->is_percent_cost ? $costInPercent : $this->cost;
 
         return round($totalPrice / 1000) * 1000;
     }
