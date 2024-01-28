@@ -120,7 +120,9 @@ class JewelryController extends Controller
         $validated['cost'] = str($validated['cost'])->replace(',', '')->toInteger();
 
         if ($validated['photo']) {
-            if ($jewelry->photo) unlink('storage/' . $jewelry->photo);
+            if ($jewelry->photo) {
+                unlink('storage/' . $jewelry->photo);
+            }
             $request->file('photo')->store('public/jewelry');
             $validated['photo'] = $request->file('photo')->hashName('jewelry');
         } else {
@@ -138,7 +140,9 @@ class JewelryController extends Controller
      */
     public function destroy(Jewelry $jewelry)
     {
-        if ($jewelry->photo) unlink('storage/' . $jewelry->photo);
+        if ($jewelry->photo) {
+            unlink('storage/' . $jewelry->photo);
+        }
         $jewelry->delete();
 
         return to_route('jewelries.index');

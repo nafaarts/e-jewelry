@@ -41,12 +41,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $orderCode =  time() . str_pad(Order::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
-
         return inertia('Order/Create', [
             'prices' => Price::orderBy('sell_price', 'DESC')->get(),
             'sales' => auth()->user()->name,
-            'order_code' => $orderCode
         ]);
     }
 
@@ -55,7 +52,38 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $request->validate([
+            'costumer_id' => 'required',
+            'price_id' => 'required',
+            'weight' => 'required',
+            'cost' => 'nullable',
+            'total_price' => 'required',
+            'paid_amount' => 'required',
+            'status' => 'required',
+            'remarks' => 'nullable|max:255',
+        ], [
+            'costumer_id.required' => 'Data kostumer wajib diisi.',
+        ]);
+
+        $orderCode =  time() . str_pad(Order::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+
+        $data = [
+            'costumer_id' => $request->costumer_id,
+            'order_number' => $orderCode,
+            'weight' => $request->weight,
+            'cost' => str($request->cost)->replace(',', '')->toInteger(),
+            'saved_price' => Price::findOrFail($request->price_id)->toJson(),
+            'total_price' => str($request->total_price)->replace(',', '')->toInteger(),
+            'paid_amount' => str($request->paid_amount)->replace(',', '')->toInteger(),
+            'status' => $request->status,
+            'remarks' => $request->remarks,
+            'created_by' => auth()->id(),
+            'updated_by' => auth()->id()
+        ];
+
+        Order::create($data);
+
+        return to_route('orders.index');
     }
 
     /**

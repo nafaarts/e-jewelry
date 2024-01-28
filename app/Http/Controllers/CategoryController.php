@@ -18,14 +18,9 @@ class CategoryController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
+                ->withCount('jewelries')
                 ->paginate(10)
-                ->withQueryString()
-                ->through(function ($item) {
-                    return [
-                        ...$item->toArray(),
-                        'amount_of_jewelries' => $item->jewelries->count()
-                    ];
-                }),
+                ->withQueryString(),
             'filters' => $request->only(['search']),
         ]);
     }

@@ -14,7 +14,6 @@ import Swal from "sweetalert2";
 import SwalConfig from "@/utils/sweetalert.conf";
 import { ref, watch, reactive } from "vue";
 import status from "@/Constant/OrderStatus";
-import { currencyFormatter } from "@/utils/currencyFormatter";
 
 const props = defineProps({
     sales: String,
@@ -29,7 +28,6 @@ const form = useForm({
     price_id: "",
     weight: "",
     cost: "",
-    price: "",
     total_price: "0",
     paid_amount: "",
     status: "PESANAN DIBUAT",
@@ -68,7 +66,7 @@ watch(priceReactive, ({ price, weight, cost }) => {
         if (cost) getPrice += parseInt(cost.replace(",", ""));
 
         const roundedPrice = Math.floor(getPrice / 1000) * 1000;
-        form.total_price = currencyFormatter.format(roundedPrice);
+        form.total_price = String(roundedPrice);
     }
 });
 
@@ -149,15 +147,16 @@ watch(costumer, (value) => form.costumer_id = value.id)
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="total_price" value="Total Harga" />
-                                    <TextInput id="total_price" type="text" class="mt-1 block w-full bg-zinc-100"
+                                    <CurrencyInput id="total_price" class="mt-1 block w-full bg-zinc-100"
                                         v-model="form.total_price" readonly />
+                                    <small class="text-zinc-500">*jumlah dibulatkan</small>
                                     <InputError class="mt-2" :message="form.errors.total_price" />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="paid_amount" value="Jumlah Dibayarkan" />
-                                    <CurrencyInput id="paid_amount" type="paid_amount" class="mt-1 block w-full"
+                                    <CurrencyInput id="paid_amount" class="mt-1 block w-full"
                                         v-model="form.paid_amount" autocomplete="paid_amount"
                                         placeholder="Masukan jumlah dibayarkan" />
                                     <InputError class="mt-2" :message="form.errors.paid_amount" />
