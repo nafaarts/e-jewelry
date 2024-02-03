@@ -25,7 +25,7 @@ const props = defineProps({
     jewelry: Object,
 });
 
-const totalPrice = ref(currencyFormatter.format(props.jewelry.sellPrice));
+const totalPrice = ref(currencyFormatter.format(props.jewelry.sell_price));
 
 const form = useForm({
     _method: "PUT",

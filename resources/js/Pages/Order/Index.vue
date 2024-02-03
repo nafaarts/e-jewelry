@@ -57,6 +57,9 @@ watch(
                             Kode Tempahan
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                            Status
+                        </th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kostumer
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
@@ -88,7 +91,12 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-xs truncate">
-                            {{ order.costumer }}
+                            {{ order.status }}
+                        </p>
+                    </td>
+                    <td class="px-4 py-2">
+                        <p class="w-fit max-w-xs truncate">
+                            {{ order.costumer?.name }}
                         </p>
                     </td>
                     <td class="px-4 py-2">

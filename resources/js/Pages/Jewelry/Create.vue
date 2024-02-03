@@ -25,11 +25,15 @@ const props = defineProps({
     suppliers: Array,
     safeboxes: Array,
     jewelry_code: String,
+    order: Object
 });
+
+const backRoute = ref(props.order ? route('orders.show', props.order?.id) : route('jewelries.index'))
 
 const form = useForm({
     price_id: "",
-    category_id: "",
+    category_id: String(props.order?.category_id ?? ""),
+    order_id: String(props.order?.id ?? ""),
     supplier_id: "",
     safe_box_id: "",
     name: "",
@@ -42,9 +46,9 @@ const form = useForm({
 });
 
 const priceReactive = reactive({
-    price: "",
-    weight: "",
-    cost: "",
+    price: String(props.order?.saved_price.id),
+    weight: String(props.order?.weight),
+    cost: String(props.order?.cost)
 });
 
 const onSubmit = () => {
@@ -67,7 +71,7 @@ const onUpdateImage = (e) => {
     imagePreview.value = URL.createObjectURL(file);
 };
 
-watch(priceReactive, ({ price, weight, cost }) => {
+const updatePrice = ({ price, weight, cost }) => {
     form.price_id = price;
     form.weight = weight;
     form.cost = cost;
@@ -82,7 +86,17 @@ watch(priceReactive, ({ price, weight, cost }) => {
         const roundedPrice = Math.floor(getPrice / 1000) * 1000;
         totalPrice.value = currencyFormatter.format(roundedPrice);
     }
-});
+}
+
+if (props.order) {
+    updatePrice({
+        price: String(props.order.saved_price.id),
+        weight: String(props.order.weight),
+        cost: String(props.order.cost)
+    })
+}
+
+watch(priceReactive, ({ price, weight, cost }) => updatePrice({ price, weight, cost }));
 </script>
 
 <template>
@@ -163,6 +177,10 @@ watch(priceReactive, ({ price, weight, cost }) => {
                                     <InputLabel for="totalPrice" value="Harga" />
                                     <TextInput id="totalPrice" class="mt-1 block w-full bg-zinc-100" v-model="totalPrice"
                                         readonly />
+                                    <small v-show="props.order" class="text-zinc-500">*harga ditampilkan
+                                        berdasarkan
+                                        'Harga dan Kadar'
+                                        sekarang.</small>
                                 </div>
                             </div>
                         </div>
@@ -264,7 +282,7 @@ watch(priceReactive, ({ price, weight, cost }) => {
                     <PrimaryButton :disabled="form.processing">
                         Simpan
                     </PrimaryButton>
-                    <Link :href="route('jewelries.index')">
+                    <Link :href="backRoute">
                     <SecondaryButton type="reset" :disabled="form.processing">
                         Kembali
                     </SecondaryButton>

@@ -106,7 +106,7 @@ const confirmDelete = (id, name) => {
                         </div>
                     </td>
                     <td class="px-4 py-2">
-                        {{ category.jewelries_count }}
+                        {{ category.jewelries_count }} barang
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-56 truncate">

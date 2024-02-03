@@ -54,7 +54,7 @@ watch(
                 <template #head>
                     <tr>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Kode
+                            Kode Penjualan
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kostumer
@@ -84,13 +84,13 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-xs truncate">
-                            {{ sale.costumer }}
+                            {{ sale.costumer?.name }}
                         </p>
                     </td>
                     <td class="px-4 py-2">
                         <p class="flex gap-1 w-fit max-w-xs truncate">
                             <span class="font-bold">{{ currencyFormatter.format(sale.total_amount) }}</span>
-                            <span>({{ sale.total_items }} item)</span>
+                            <span>({{ sale.items_count }} item)</span>
                         </p>
                     </td>
                     <td class="px-4 py-2">

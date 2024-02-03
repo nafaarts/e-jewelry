@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jewelry;
+use App\Models\Order;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class SaleController extends Controller
     {
         return inertia('Sale/Index', [
             'sales' => Sale::query()
+                ->with('costumer')
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('sale_number', 'like', "%{$search}%")
                         ->orWhereHas('costumer', function ($query) use ($search) {
@@ -23,16 +25,10 @@ class SaleController extends Controller
                                 ->orWhere('address', 'like', "%{$search}%");
                         });
                 })
+                ->withCount('items')
                 ->latest()
                 ->paginate(10)
-                ->withQueryString()
-                ->through(function ($item) {
-                    return [
-                        ...$item->toArray(),
-                        'costumer' => $item?->costumer?->name,
-                        'total_items' => $item->items->count()
-                    ];
-                }),
+                ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
     }
@@ -40,10 +36,21 @@ class SaleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        $order = Order::find($request->order_id);
+        if ($order) {
+            $order->load('jewelry');
+            $order->load('costumer');
+
+            if ($order->jewelry->status == 'SOLD') {
+                return back()->with('message', 'Barang sudah terjual!');
+            }
+        }
+
         return inertia('Sale/Create', [
             'sales' => auth()->user()->name,
+            'order' => $order
         ]);
     }
 
@@ -54,6 +61,8 @@ class SaleController extends Controller
     {
         $request->validate([
             'costumer_id' => 'required',
+        ], [
+            'costumer_id.required' => 'Data kostumer wajib diisi.'
         ]);
 
         $sale_number = time() . str_pad(Sale::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
@@ -74,7 +83,7 @@ class SaleController extends Controller
 
             $sale->items()->create([
                 'jewelry_id' => $item['id'],
-                'price' => $item['sellPrice']
+                'price' => $item['sell_price']
             ]);
         }
 
@@ -86,9 +95,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale)
     {
-        $sale->load('costumer');
-        $sale->load('createdBy');
-        $sale->load('updatedBy');
+        $sale->load('costumer', 'createdBy', 'updatedBy');
 
         $sale->sold_items = $sale->items->map(function ($item) {
             return [
@@ -101,7 +108,7 @@ class SaleController extends Controller
                     'carat' => $item->jewelry->price->carat,
                     'rate' => $item->jewelry->price->rate,
                 ],
-                'sellPrice' => $item->jewelry->sellPrice(),
+                'sell_price' => $item->jewelry->sell_price,
                 'photo' => $item->jewelry->photo
             ];
         });

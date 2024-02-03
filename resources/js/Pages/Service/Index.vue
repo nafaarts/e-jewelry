@@ -90,7 +90,7 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-xs truncate">
-                            {{ service.costumer }}
+                            {{ service.costumer?.name }}
                         </p>
                     </td>
                     <td class="px-4 py-2">

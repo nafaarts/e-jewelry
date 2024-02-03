@@ -1,3 +1,3 @@
-const status = ['PESANAN DIBUAT', 'DIPROSES', 'SELESAI', 'SUDAH DIAMBIL'];
+const status = ['PESANAN DIBUAT', 'DIPROSES', 'SELESAI'];
 
 export default status;

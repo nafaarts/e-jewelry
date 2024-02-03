@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Price;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class OrderController extends Controller
     {
         return inertia('Order/Index', [
             'orders' => Order::query()
+                ->with('costumer')
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('order_number', 'like', "%{$search}%")
                         ->orWhereHas('costumer', function ($query) use ($search) {
@@ -25,13 +27,7 @@ class OrderController extends Controller
                 })
                 ->latest()
                 ->paginate(10)
-                ->withQueryString()
-                ->through(function ($item) {
-                    return [
-                        ...$item->toArray(),
-                        'costumer' => $item?->costumer?->name,
-                    ];
-                }),
+                ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
     }
@@ -42,6 +38,7 @@ class OrderController extends Controller
     public function create()
     {
         return inertia('Order/Create', [
+            'categories' => Category::all(),
             'prices' => Price::orderBy('sell_price', 'DESC')->get(),
             'sales' => auth()->user()->name,
         ]);
@@ -55,6 +52,7 @@ class OrderController extends Controller
         $request->validate([
             'costumer_id' => 'required',
             'price_id' => 'required',
+            'category_id' => 'required',
             'weight' => 'required',
             'cost' => 'nullable',
             'total_price' => 'required',
@@ -63,12 +61,15 @@ class OrderController extends Controller
             'remarks' => 'nullable|max:255',
         ], [
             'costumer_id.required' => 'Data kostumer wajib diisi.',
+            'category_id.required' => 'Kategori wajib diisi.',
+            'price_id.required' => 'Kadar dan Harga wajib diisi.'
         ]);
 
         $orderCode =  time() . str_pad(Order::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
 
         $data = [
             'costumer_id' => $request->costumer_id,
+            'category_id' => $request->category_id,
             'order_number' => $orderCode,
             'weight' => $request->weight,
             'cost' => str($request->cost)->replace(',', '')->toInteger(),
@@ -91,15 +92,25 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load('costumer');
+        $order->load('jewelry');
+        $order->load('category');
+        $order->load('createdBy');
+        $order->load('updatedBy');
+
+        $order->saved_price = json_decode($order->saved_price);
+
+        return inertia('Order/Detail', [
+            'order' => $order
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Order $order)
+    public function edit(Request $request, Order $order)
     {
-        //
+       //
     }
 
     /**
@@ -107,7 +118,19 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        if ($request->type == 'status') {
+            $order->update([
+                'status' => $request->status,
+                'updated_by' => auth()->id()
+            ]);
+        } elseif ($request->type == 'paid-full') {
+            $order->update([
+                'paid_amount' => $order->total_price,
+                'updated_by' => auth()->id()
+            ]);
+        }
+
+        return back();
     }
 
     /**
@@ -115,6 +138,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
+        return to_route('orders.index');
     }
 }

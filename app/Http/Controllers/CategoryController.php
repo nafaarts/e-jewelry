@@ -20,7 +20,7 @@ class CategoryController extends Controller
                 ->latest()
                 ->withCount('jewelries')
                 ->paginate(10)
-                ->withQueryString(),
+                ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
     }

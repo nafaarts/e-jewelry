@@ -16,9 +16,9 @@ import { ref, watch, reactive } from "vue";
 import status from "@/Constant/OrderStatus";
 
 const props = defineProps({
+    categories: Array,
     sales: String,
     prices: Array,
-    order_code: String,
 })
 
 const sales = ref(props.sales)
@@ -26,6 +26,7 @@ const costumer = ref({})
 const form = useForm({
     costumer_id: "",
     price_id: "",
+    category_id: "",
     weight: "",
     cost: "",
     total_price: "0",
@@ -107,6 +108,23 @@ watch(costumer, (value) => form.costumer_id = value.id)
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
+                                    <InputLabel for="category_id" value="Kategori" />
+                                    <Select v-model="form.category_id">
+                                        <option value="">
+                                            - Pilih kategori -
+                                        </option>
+                                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                                            {{ category.name }}
+                                        </option>
+                                    </Select>
+                                    <InputError class="mt-2" :message="form.errors.category_id" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
                                     <InputLabel for="price_id" value="Kadar dan Harga" />
                                     <Select v-model="priceReactive.price">
                                         <option value="">
@@ -121,9 +139,6 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                     <InputError class="mt-2" :message="form.errors.price_id" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="weight" value="Berat (gram)" />
@@ -133,6 +148,9 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                     <InputError class="mt-2" :message="form.errors.weight" />
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="cost" value="Ongkos" />
@@ -141,24 +159,22 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                     <InputError class="mt-2" :message="form.errors.cost" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="total_price" value="Total Harga" />
                                     <CurrencyInput id="total_price" class="mt-1 block w-full bg-zinc-100"
                                         v-model="form.total_price" readonly />
-                                    <small class="text-zinc-500">*jumlah dibulatkan</small>
                                     <InputError class="mt-2" :message="form.errors.total_price" />
                                 </div>
                             </div>
-                            <div class="w-full md:w-1/2 space-y-6">
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full space-y-6">
                                 <div>
                                     <InputLabel for="paid_amount" value="Jumlah Dibayarkan" />
-                                    <CurrencyInput id="paid_amount" class="mt-1 block w-full"
-                                        v-model="form.paid_amount" autocomplete="paid_amount"
-                                        placeholder="Masukan jumlah dibayarkan" />
+                                    <CurrencyInput id="paid_amount" class="mt-1 block w-full" v-model="form.paid_amount"
+                                        autocomplete="paid_amount" placeholder="Masukan jumlah dibayarkan" />
                                     <InputError class="mt-2" :message="form.errors.paid_amount" />
                                 </div>
                             </div>

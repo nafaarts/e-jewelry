@@ -5,6 +5,8 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import SidebarLink from "@/Components/SidebarLink.vue";
 import ImageCover from "@/Components/ImageCover.vue";
 import { Link, usePage } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
+import SwalConfig from "@/utils/sweetalert.conf";
 
 const dropdown = ref(null);
 
@@ -34,6 +36,15 @@ const showingSidebar = ref(false);
 const toggleSidebar = () => {
     showingSidebar.value = !showingSidebar.value;
 };
+
+if (page.props.flash.message) {
+    Swal.fire({
+        title: "Info",
+        icon: "info",
+        text: page.props.flash.message,
+        ...SwalConfig,
+    });
+}
 </script>
 
 <template>
@@ -154,10 +165,10 @@ const toggleSidebar = () => {
                     <ul className="mb-6 flex flex-col gap-1.5">
                         <SidebarLink :link="route('sales.index')" label="Penjualan" icon="money-bill"
                             :active="route().current('sales*')" />
-                        <SidebarLink :link="route('services.index')" label="Service" icon="refresh"
-                            :active="route().current('services*')" />
                         <SidebarLink :link="route('orders.index')" label="Tempahan" icon="hammer"
                             :active="route().current('orders*')" />
+                        <SidebarLink :link="route('services.index')" label="Service" icon="refresh"
+                            :active="route().current('services*')" />
                     </ul>
                 </div>
                 <div>
@@ -166,14 +177,16 @@ const toggleSidebar = () => {
                     </h3>
 
                     <ul className="mb-6 flex flex-col gap-1.5">
-                        <SidebarLink link="home" label="Pengaturan" icon="gear" class="italic line-through" />
+                        <SidebarLink link="home" label="Laporan" icon="file" class="italic line-through" />
+                        <SidebarLink :link="route('setting')" label="Pengaturan" icon="gear"
+                            :active="route().current('setting*')" />
                     </ul>
                 </div>
             </aside>
 
             <div :class="{
                 'absolute h-screen top-0 pt-20': showingSidebar,
-            }" class="p-4 md:p-6 bg-zinc-100 flex-1 overflow-y-auto no-scrollbar">
+            }" class="p-4 md:p-6 bg-zinc-100 flex-1 overflow-y-auto no-scrollbar  text-xs md:text-base">
                 <transition name="fade">
                     <div v-if="showingSidebar" @click="toggleSidebar" class="fixed inset-0 bg-black bg-opacity-25"></div>
                 </transition>

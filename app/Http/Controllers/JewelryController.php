@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Jewelry;
+use App\Models\Order;
 use App\Models\Price;
 use App\Models\SafeBox;
 use App\Models\Supplier;
@@ -27,11 +28,7 @@ class JewelryController extends Controller
                 })
                 ->latest()
                 ->paginate(10)
-                ->withQueryString()
-                ->through(function ($data) {
-                    $data->sellPrice = $data->sellPrice();
-                    return $data;
-                }),
+                ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
     }
@@ -39,15 +36,22 @@ class JewelryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $jewelryCode =  time() . str_pad(Jewelry::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+
+        $order = Order::find($request->order_id);
+        if ($order) {
+            $order->saved_price = json_decode($order->saved_price);
+        }
+
         return inertia('Jewelry/Create', [
             'prices' => Price::orderBy('sell_price', 'DESC')->get(),
             'categories' => Category::all(),
             'suppliers' => Supplier::all(),
             'safeboxes' => SafeBox::all(),
-            'jewelry_code' => $jewelryCode
+            'jewelry_code' => $jewelryCode,
+            'order' => $order
         ]);
     }
 
@@ -59,6 +63,7 @@ class JewelryController extends Controller
         $validated = $request->validate([
             'price_id' => 'required',
             'category_id' => 'required',
+            'order_id' => 'nullable',
             'supplier_id' => 'required',
             'safe_box_id' => 'required',
             'name' => 'required|max:255',
@@ -77,7 +82,15 @@ class JewelryController extends Controller
             $validated['photo'] = $request->file('photo')->hashName('jewelry');
         }
 
-        Jewelry::create($validated);
+        $jewelry = Jewelry::create($validated);
+
+        if ($validated['order_id']) {
+            $order = Order::findOrFail($validated['order_id']);
+            $order->update([
+                'jewelry_id' => $jewelry->id,
+                'status' => 'SELESAI'
+            ]);
+        }
 
         return to_route('jewelries.index');
     }
@@ -87,8 +100,6 @@ class JewelryController extends Controller
      */
     public function edit(Jewelry $jewelry)
     {
-        $jewelry->sellPrice = $jewelry->sellPrice();
-
         return inertia('Jewelry/Edit', [
             'prices' => Price::all(),
             'categories' => Category::all(),

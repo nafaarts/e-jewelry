@@ -13,6 +13,7 @@ class Order extends Model
     protected $fillable = [
         'costumer_id',
         'jewelry_id',
+        'category_id',
         'order_number',
         'remarks',
         'weight',
@@ -34,6 +35,11 @@ class Order extends Model
     public function jewelry(): BelongsTo
     {
         return $this->belongsTo(Jewelry::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function createdBy(): BelongsTo

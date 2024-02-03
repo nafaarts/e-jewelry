@@ -98,22 +98,22 @@ const confirmDelete = (name) => {
                         <tr>
                             <th>Nama Kostumer</th>
                             <td class="px-3">:</td>
-                            <td>{{ sale.costumer.name }}</td>
+                            <td>{{ sale.costumer?.name }}</td>
                         </tr>
                         <tr>
                             <th>Nomor Indentitas</th>
                             <td class="px-3">:</td>
-                            <td>{{ sale.costumer.indentity_number ?? '-' }}</td>
+                            <td>{{ sale.costumer?.indentity_number ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Nomor Telepon</th>
                             <td class="px-3">:</td>
-                            <td>{{ sale.costumer.phone_number }}</td>
+                            <td>{{ sale.costumer?.phone_number }}</td>
                         </tr>
                         <tr>
                             <th>Address</th>
                             <td class="px-3">:</td>
-                            <td>{{ sale.costumer.address }}</td>
+                            <td>{{ sale.costumer?.address }}</td>
                         </tr>
                     </table>
 
@@ -202,7 +202,7 @@ const confirmDelete = (name) => {
                     </td>
                     <td class="px-4 py-2">
                         <div class="font-medium text-gray-900 whitespace-nowrap">
-                            {{ currencyFormatter.format(jewelry.sellPrice) }}
+                            {{ currencyFormatter.format(jewelry.sell_price) }}
                         </div>
                     </td>
                 </tr>

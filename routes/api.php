@@ -69,7 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     'carat' => $jewelry->price->carat,
                     'rate' => $jewelry->price->rate,
                 ],
-                'sellPrice' => $jewelry->sellPrice(),
+                'sell_price' => $jewelry->sell_price,
                 'photo' => $jewelry->photo
             ]
         ]);

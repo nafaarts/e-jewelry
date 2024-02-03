@@ -1,10 +1,10 @@
 FROM php:8.2-fpm
 
-ARG UID
-ARG GID
- 
-ENV UID=${UID}
-ENV GID=${GID}
+ARG LOCAL_UID
+ARG LOCAL_GID
+
+ENV LOCAL_UID=${LOCAL_UID}
+ENV LOCAL_GID=${LOCAL_GID}
 
 # Install ekstensi yang diperlukan oleh Laravel (including Nginx)
 RUN apt-get update && apt-get install -y \
@@ -40,14 +40,14 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # permisson
-RUN addgroup --gid ${GID} --system laravel
-RUN adduser --group laravel --system --disabled-password --shell /bin/sh --uid ${UID}
+RUN addgroup --gid ${LOCAL_GID} --system laravel
+RUN adduser --group laravel --system --disabled-password --shell /bin/sh --uid ${LOCAL_UID}
 
 RUN sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.conf
 
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 777 /var/www/html/storage/
+RUN chown -R laravel:laravel /var/www/html
+RUN chmod -R 755 /var/www/html/storage/
 
 # Salin konfigurasi Nginx ke dalam kontainer
 COPY nginx.conf /etc/nginx/sites-available/default

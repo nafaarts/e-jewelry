@@ -18,8 +18,10 @@ import axiosInstance from "@/utils/AxiosInstance";
 
 const props = defineProps({
     sales: String,
-    categories: Array,
+    order: Object
 })
+
+const backRoute = ref(props.order ? route('orders.show', props.order?.id) : route('sales.index'))
 
 const sales = ref(props.sales)
 const costumer = ref({})
@@ -32,27 +34,33 @@ const form = useForm({
     items: []
 });
 
-// 16931385610001
+const addItem = (data) => {
+    let check = form.items.find(o => o.jewelry_code === data.jewelry_code);
+    if (!check) {
+        form.items.push(data);
+        form.total_amount = form.items.reduce((total, item) => total + item.sell_price, 0);
+
+        jewelry_code.value = "";
+    } else {
+        Swal.fire({
+            title: "Opps",
+            icon: "error",
+            text: "Barang sudah di input!",
+            ...SwalConfig,
+        });
+    }
+}
+
 const onAddItem = () => {
     axiosInstance.get(`/api/jewelry?code=${jewelry_code.value}`)
         .then(response => {
-            let check = form.items.find(o => o.jewelry_code === response.data.data.jewelry_code);
-            if (!check) {
-                form.items.push(response.data.data);
-                form.total_amount = form.items.reduce((total, item) => total + item.sellPrice, 0);
-
-                jewelry_code.value = "";
-            } else {
-                Swal.fire({
-                    title: "Opps",
-                    icon: "error",
-                    text: "Barang sudah di input!",
-                    ...SwalConfig,
-                });
-            }
+            console.log(response);
+            addItem(response.data.data)
         })
         .catch(error => {
-            if (error.response.status === 404) {
+            console.log(error);
+
+            if (error?.response.status === 404) {
                 Swal.fire({
                     title: "Opps",
                     icon: "error",
@@ -65,7 +73,7 @@ const onAddItem = () => {
 
 const onDeleteItem = (jewelry_code) => {
     form.items = form.items.filter(item => item.jewelry_code !== jewelry_code)
-    form.total_amount = form.items.reduce((total, item) => total + item.sellPrice, 0);
+    form.total_amount = form.items.reduce((total, item) => total + item.sell_price, 0);
 }
 
 const onSubmit = () => {
@@ -101,7 +109,29 @@ const onSubmit = () => {
     }
 };
 
-watch(costumer, (value) => form.costumer_id = value.id)
+// add item if sale coming from order.
+if (props.order) {
+    addItem({
+        id: props.order.jewelry.id,
+        jewelry_code: props.order.jewelry.jewelry_code,
+        name: props.order.jewelry.name,
+        weight: props.order.jewelry.weight,
+        price: {
+            category: props.order.jewelry.price.category,
+            carat: props.order.jewelry.price.carat,
+            rate: props.order.jewelry.price.rate,
+        },
+        sell_price: props.order.total_price,
+        photo: props.order.jewelry.photo,
+    })
+
+    costumer.value = props.order.costumer
+    form.costumer_id = props.order.costumer.id
+}
+
+watch(costumer, (value) => {
+    form.costumer_id = value.id
+})
 </script>
 
 <template>
@@ -182,7 +212,7 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                         </td>
                                         <td class="px-4 py-2">
                                             <div class="font-medium text-gray-900 whitespace-nowrap">
-                                                {{ currencyFormatter.format(jewelry.sellPrice) }}
+                                                {{ currencyFormatter.format(jewelry.sell_price) }}
                                             </div>
                                         </td>
 
@@ -213,7 +243,7 @@ watch(costumer, (value) => form.costumer_id = value.id)
                             <PrimaryButton :disabled="form.processing">
                                 Simpan
                             </PrimaryButton>
-                            <Link :href="route('services.index')">
+                            <Link :href="backRoute">
                             <SecondaryButton type="reset" :disabled="form.processing">
                                 Kembali
                             </SecondaryButton>

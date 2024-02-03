@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,8 @@ class Jewelry extends Model
         'remarks'
     ];
 
+    protected $appends = ['sell_price', 'buy_price'];
+
     public function price(): BelongsTo
     {
         return $this->belongsTo(Price::class);
@@ -45,24 +48,20 @@ class Jewelry extends Model
         return $this->belongsTo(SafeBox::class);
     }
 
-    public function sellPrice(): float
+    public function getSellPriceAttribute(): float
     {
         $totalPrice     =  ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
-
         $costInPercent  =  $totalPrice * $this->cost / 100;
-
         $totalPrice     += $this->is_percent_cost ? $costInPercent : $this->cost;
 
         return round($totalPrice / 1000) * 1000;
     }
 
-    public function buyPrice(): float
+    public function getBuyPriceAttribute(): float
     {
         $totalPrice     = ($this->weight / $this->price->weight) * $this->price->buy_price;
-
         // if cost not required, remove here!
         $costInPercent  =  $totalPrice * $this->cost / 100;
-
         $totalPrice     += $this->is_percent_cost ? $costInPercent : $this->cost;
 
         return round($totalPrice / 1000) * 1000;

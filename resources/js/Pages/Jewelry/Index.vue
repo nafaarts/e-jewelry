@@ -82,9 +82,9 @@ const confirmDelete = (id, name) => {
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Nama
                         </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                        <!-- <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Deskripsi
-                        </th>
+                        </th> -->
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Status
                         </th>
@@ -130,11 +130,11 @@ const confirmDelete = (id, name) => {
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-2">
+                    <!-- <td class="px-4 py-2">
                         <p class="w-fit max-w-56 truncate">
                             {{ jewelry.remarks ?? '-' }}
                         </p>
-                    </td>
+                    </td> -->
                     <td class="px-4 py-2">
                         <div class="flex items-center">
                             <div :class="{
@@ -167,7 +167,7 @@ const confirmDelete = (id, name) => {
                     </td>
                     <td class="px-4 py-2">
                         <div class="font-medium text-gray-900 whitespace-nowrap">
-                            {{ currencyFormatter.format(jewelry.sellPrice) }}
+                            {{ currencyFormatter.format(jewelry.sell_price) }}
                         </div>
                     </td>
                     <td class="px-4 py-2">

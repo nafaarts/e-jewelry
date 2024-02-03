@@ -15,6 +15,7 @@ class ServiceController extends Controller
     {
         return inertia('Service/Index', [
             'services' => Service::query()
+                ->with('costumer')
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('service_number', 'like', "%{$search}%")
                         ->orWhereHas('costumer', function ($query) use ($search) {
@@ -25,13 +26,7 @@ class ServiceController extends Controller
                 })
                 ->latest()
                 ->paginate(10)
-                ->withQueryString()
-                ->through(function ($item) {
-                    return [
-                        ...$item->toArray(),
-                        'costumer' => $item?->costumer?->name
-                    ];
-                }),
+                ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
     }
@@ -108,11 +103,13 @@ class ServiceController extends Controller
     {
         if ($request->type == 'status') {
             $service->update([
-                'status' => $request->status
+                'status' => $request->status,
+                'updated_by' => auth()->id()
             ]);
         } elseif ($request->type == 'paid-full') {
             $service->update([
-                'paid_amount' => $service->cost
+                'paid_amount' => $service->cost,
+                'updated_by' => auth()->id()
             ]);
         }
 
