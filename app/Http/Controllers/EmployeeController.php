@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
@@ -99,10 +100,10 @@ class EmployeeController extends Controller
             'remarks' => 'nullable'
         ]);
 
-        // dd($validated);
-
         if ($validated['photo']) {
-            if ($employee->photo) unlink('storage/' . $employee->photo);
+            if ($employee->photo) {
+                Storage::delete("public/" . $employee->photo);
+            }
             $request->file('photo')->store('public/user');
             $validated['photo'] = $request->file('photo')->hashName('user');
         } else {
@@ -124,7 +125,9 @@ class EmployeeController extends Controller
      */
     public function destroy(User $employee)
     {
-        if ($employee->photo) unlink('storage/' . $employee->photo);
+        if ($employee->photo) {
+            Storage::delete("public/" . $employee->photo);
+        }
 
         $employee->delete();
 

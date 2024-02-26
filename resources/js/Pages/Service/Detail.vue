@@ -269,22 +269,25 @@ const confirmPaidFull = () => {
 
         <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4">
             <div class="flex flex-col md:flex-row justify-between gap-3">
+                <Link :href="route('services.index')">
+                <SecondaryButton class="w-full h-full">
+                    <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i> <span class="md:hidden">Kembali</span>
+                </SecondaryButton>
+                </Link>
                 <div class="flex flex-col md:flex-row gap-3">
-                    <Link :href="route('services.index')">
-                    <SecondaryButton class="w-full h-full">
-                        <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i> <span class="md:hidden">Kembali</span>
-                    </SecondaryButton>
-                    </Link>
                     <SecondaryButton v-if="service.paid_amount !== service.cost" @click="confirmPaidFull">
                         <i class="fas fa-fw fa-check me-2"></i> Tetapkan Lunas
                     </SecondaryButton>
-                    <SecondaryButton>
+                    <Link :href="route('services.print', service.id)">
+                    <SecondaryButton class="w-full">
                         <i class="fas fa-fw fa-download me-2"></i> Cetak Faktur
                     </SecondaryButton>
+                    </Link>
+                    <DangerButton @click="confirmDelete(service?.service_number)"
+                        v-if="$page.props.auth.user.role === 'ADMIN'">
+                        <i class="fas fa-fw fa-trash me-2 md:m-0"></i> <span class="md:hidden">Hapus</span>
+                    </DangerButton>
                 </div>
-                <DangerButton @click="confirmDelete(service?.service_number)" v-if="$page.props.auth.user.role === 'ADMIN'">
-                    <i class="fas fa-fw fa-trash me-2 md:m-0"></i> <span class="md:hidden">Hapus</span>
-                </DangerButton>
             </div>
         </div>
 

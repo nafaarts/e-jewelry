@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Meta;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -123,5 +124,22 @@ class ServiceController extends Controller
     {
         $service->delete();
         return to_route('services.index');
+    }
+
+    /**
+     * Print the specified resource.
+     */
+    public function print(Service $service)
+    {
+        $service->load('costumer', 'category');
+
+        $config = Meta::whereIn('key', [
+            'invoice_service_header_image', 'invoice_service_paper_size', 'invoice_service_note'
+        ])->pluck('value', 'key');
+
+        return inertia('Service/Print', [
+            'service' => $service,
+            'config' => $config
+        ]);
     }
 }

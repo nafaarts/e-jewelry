@@ -48,6 +48,11 @@ class Jewelry extends Model
         return $this->belongsTo(SafeBox::class);
     }
 
+    public function saleItem(): BelongsTo
+    {
+        return $this->belongsTo(SaleItem::class);
+    }
+
     public function getSellPriceAttribute(): float
     {
         $totalPrice     =  ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);

@@ -9,6 +9,7 @@ use App\Models\Price;
 use App\Models\SafeBox;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class JewelryController extends Controller
@@ -132,7 +133,7 @@ class JewelryController extends Controller
 
         if ($validated['photo']) {
             if ($jewelry->photo) {
-                unlink('storage/' . $jewelry->photo);
+                Storage::delete('public/' . $jewelry->photo);
             }
             $request->file('photo')->store('public/jewelry');
             $validated['photo'] = $request->file('photo')->hashName('jewelry');
@@ -152,7 +153,7 @@ class JewelryController extends Controller
     public function destroy(Jewelry $jewelry)
     {
         if ($jewelry->photo) {
-            unlink('storage/' . $jewelry->photo);
+            Storage::delete('public/' . $jewelry->photo);
         }
         $jewelry->delete();
 

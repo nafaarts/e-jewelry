@@ -177,7 +177,8 @@ if (page.props.flash.message) {
                     </h3>
 
                     <ul className="mb-6 flex flex-col gap-1.5">
-                        <SidebarLink link="home" label="Laporan" icon="file" class="italic line-through" />
+                        <SidebarLink :link="route('report.index')" label="Laporan" icon="file"
+                            :active="route().current('report*')" />
                         <SidebarLink :link="route('setting')" label="Pengaturan" icon="gear"
                             :active="route().current('setting*')" />
                     </ul>

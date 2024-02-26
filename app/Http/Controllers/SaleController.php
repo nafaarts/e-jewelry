@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jewelry;
+use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Sale;
 use Illuminate\Http\Request;
@@ -40,8 +41,7 @@ class SaleController extends Controller
     {
         $order = Order::find($request->order_id);
         if ($order) {
-            $order->load('jewelry');
-            $order->load('costumer');
+            $order->load('jewelry', 'costumer');
 
             if ($order->jewelry->status == 'SOLD') {
                 return back()->with('message', 'Barang sudah terjual!');
@@ -148,5 +148,39 @@ class SaleController extends Controller
         $sale->delete();
 
         return to_route('sales.index');
+    }
+
+
+    /**
+     * Print the specified resource.
+     */
+    public function print(Sale $sale)
+    {
+        $sale->load('items', 'costumer');
+
+        $config = Meta::whereIn('key', [
+            'invoice_sale_header_image', 'invoice_sale_paper_size', 'invoice_sale_note'
+        ])->pluck('value', 'key');
+
+        $sale->sold_items = $sale->items->map(function ($item) {
+            return [
+                'id' => $item->jewelry->id,
+                'jewelry_code' => $item->jewelry->jewelry_code,
+                'name' => $item->jewelry->name,
+                'remarks' => $item->jewelry->remarks ?? '-',
+                'weight' => $item->jewelry->weight,
+                'price' => [
+                    'carat' => $item->jewelry->price->carat,
+                    'rate' => $item->jewelry->price->rate,
+                ],
+                'sell_price' => $item->jewelry->sell_price,
+                'photo' => $item->jewelry->photo
+            ];
+        });
+
+        return inertia('Sale/Print', [
+            'sale' => $sale,
+            'config' => $config
+        ]);
     }
 }

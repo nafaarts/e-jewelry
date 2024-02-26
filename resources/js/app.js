@@ -6,7 +6,7 @@ import { createApp, h } from "vue";
 import { createInertiaApp, Link, Head } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+// import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Bina Nusa";

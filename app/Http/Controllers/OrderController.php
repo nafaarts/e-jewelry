@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Price;
 use Illuminate\Http\Request;
@@ -110,7 +111,7 @@ class OrderController extends Controller
      */
     public function edit(Request $request, Order $order)
     {
-       //
+        //
     }
 
     /**
@@ -140,5 +141,21 @@ class OrderController extends Controller
     {
         $order->delete();
         return to_route('orders.index');
+    }
+
+    public function print(Order $order)
+    {
+        $order->load('costumer', 'jewelry', 'category');
+
+        $order->saved_price = json_decode($order->saved_price);
+
+        $config = Meta::whereIn('key', [
+            'invoice_order_header_image', 'invoice_order_paper_size', 'invoice_order_note'
+        ])->pluck('value', 'key');
+
+        return inertia('Order/Print', [
+            'order' => $order,
+            'config' => $config
+        ]);
     }
 }

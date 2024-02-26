@@ -154,7 +154,7 @@ watch(costumer, (value) => {
                         <form @submit.prevent="onAddItem">
                             <InputLabel for="jewelry_code" value="Kode Barang" />
                             <TextInput id="jewelry_code" type="text" class="mt-1 block w-full" v-model="jewelry_code"
-                                autocomplete="jewelry_code" placeholder="Masukan kode barang" />
+                                autocomplete="jewelry_code" placeholder="Masukan kode barang" autofocus />
                         </form>
 
                         <div
