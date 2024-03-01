@@ -167,7 +167,7 @@ if (page.props.flash.message) {
                             :active="route().current('sales*')" />
                         <SidebarLink :link="route('orders.index')" label="Tempahan" icon="hammer"
                             :active="route().current('orders*')" />
-                        <SidebarLink :link="route('services.index')" label="Service" icon="refresh"
+                        <SidebarLink :link="route('services.index')" label="Perbaikan" icon="refresh"
                             :active="route().current('services*')" />
                     </ul>
                 </div>

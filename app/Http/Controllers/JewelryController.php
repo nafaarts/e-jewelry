@@ -71,6 +71,7 @@ class JewelryController extends Controller
             'jewelry_code' => 'required|unique:jewelries,jewelry_code',
             'weight' => 'required',
             'cost' => 'nullable',
+            'is_percent_cost' => 'required|boolean',
             'photo' => 'nullable|image|max:5240',
             'status' => 'required',
             'remarks' => 'nullable'
@@ -124,6 +125,7 @@ class JewelryController extends Controller
             'jewelry_code' => ['required', Rule::unique(Jewelry::class)->ignore($jewelry->id)],
             'weight' => 'required',
             'cost' => 'nullable',
+            'is_percent_cost' => 'required|boolean',
             'photo' => 'nullable|image|max:5240',
             'status' => 'required',
             'remarks' => 'nullable'

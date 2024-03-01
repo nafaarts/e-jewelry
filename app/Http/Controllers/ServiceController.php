@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Meta;
 use App\Models\Service;
+use App\Rules\MaxLines;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -53,9 +54,18 @@ class ServiceController extends Controller
             'category_id' => 'required',
             'weight' => 'required',
             'cost' => 'required',
-            'paid_amount' => 'nullable',
-            'remarks' => 'nullable',
+            'paid_amount' => 'required',
+            'estimated_date' => 'required',
+            'remarks' => ['nullable', new MaxLines(10)],
             'status' => 'required'
+        ], [
+            'costumer_id.required' => 'Pelanggan wajib diisi.',
+            'category_id.required' => 'Kategori wajib diisi.',
+            'weight.required' => 'Berat wajib diisi.',
+            'cost.required' => 'Biaya wajib diisi.',
+            'estimated_date.required' => 'Tanggal estimasi wajib diisi.',
+            'status.required' => 'Status wajib diisi.',
+            'paid_amount.required' => 'Jumlah bayar wajib diisi.',
         ]);
 
         $serviceNumber = time() . str_pad(Service::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
@@ -110,6 +120,11 @@ class ServiceController extends Controller
         } elseif ($request->type == 'paid-full') {
             $service->update([
                 'paid_amount' => $service->cost,
+                'updated_by' => auth()->id()
+            ]);
+        } elseif ($request->type == 'taken') {
+            $service->update([
+                'date_taken' => now(),
                 'updated_by' => auth()->id()
             ]);
         }

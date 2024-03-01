@@ -28,6 +28,10 @@ const paidForm = useForm({
     type: 'paid-full',
 });
 
+const takenForm = useForm({
+    type: 'taken',
+});
+
 const confirmPaidFull = () => {
     Swal.fire({
         title: "Konfirmasi",
@@ -50,6 +54,31 @@ const confirmPaidFull = () => {
             });
         }
     });
+}
+
+const confirmDateTaken = () => {
+    Swal.fire({
+        title: "Konfirmasi",
+        html: `<span>Apakah anda yakin untuk konfirmasi pengambilan?</span>`,
+        showCancelButton: true,
+        cancelButtonText: "Tidak",
+        confirmButtonText: "Ya",
+        ...SwalConfig,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            takenForm.patch(route("orders.update", props.order.id), {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: "Berhasil",
+                        icon: "success",
+                        text: "Pengambilan berhasil dikonfirmasi!",
+                        ...SwalConfig,
+                    });
+                },
+            });
+        }
+    });
+
 }
 
 const confirmStatusUpdate = () => {
@@ -178,6 +207,16 @@ const confirmDelete = (name) => {
                             <td class="px-3">:</td>
                             <td class="font-medium text-red-600">{{ currencyFormatter.format(order.total_price -
                                 order.paid_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estimasi Selesai</th>
+                            <td class="px-3">:</td>
+                            <td>{{ order.estimated_date ? moment(order.estimated_date).format("DD MMMM YYYY") : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tanggal Diambil</th>
+                            <td class="px-3">:</td>
+                            <td>{{ order.date_taken ? moment(order.date_taken).format("DD MMMM YYYY") : '-' }}</td>
                         </tr>
                         <tr>
                             <th>Status</th>
@@ -324,7 +363,8 @@ const confirmDelete = (name) => {
                 <div v-if="order.jewelry !== null"
                     class="flex-1 flex gap-2 border p-2 border-gray-200 bg-gray-50 rounded-md mb-2">
                     <div class="hidden md:flex items-center justify-center overflow-hidden">
-                        <img :src="`/storage/${order.jewelry.photo}`" class="h-20 rounded aspect-square" alt="jewelry">
+                        <img :src="order.jewelry.photo ? `/storage/${order.jewelry.photo}` : '/images/image-placeholder.png'"
+                            class="h-20 rounded aspect-square" alt="jewelry">
                     </div>
                     <div class="flex items-center">
                         <table class="text-left">
@@ -377,11 +417,15 @@ const confirmDelete = (name) => {
                 </SecondaryButton>
                 </Link>
                 <div class="flex flex-col md:flex-row gap-3">
+                    <SecondaryButton v-if="!order.date_taken && order.paid_amount === order.total_price"
+                        @click="confirmDateTaken">
+                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi Pengambilan
+                    </SecondaryButton>
                     <SecondaryButton v-if="order.paid_amount !== order.total_price" @click="confirmPaidFull">
                         <i class="fas fa-fw fa-check me-2"></i> Tetapkan Lunas
                     </SecondaryButton>
                     <Link :href="route('orders.print', order.id)">
-                    <SecondaryButton>
+                    <SecondaryButton class="w-full md:w-fit">
                         <i class="fas fa-fw fa-download me-2"></i> Cetak Faktur
                     </SecondaryButton>
                     </Link>

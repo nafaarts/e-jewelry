@@ -150,7 +150,7 @@ const confirmDelete = (id, name) => {
                     </td>
                     <td class="px-4 py-2">
                         <div class="font-medium text-gray-900 whitespace-nowrap">
-                            {{ jewelry.category.name }}
+                            {{ jewelry.category?.name }}
                         </div>
                     </td>
                     <td class="px-4 py-2">

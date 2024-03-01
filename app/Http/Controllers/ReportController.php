@@ -41,7 +41,8 @@ class ReportController extends Controller
             ->when($priceId !== 'all', function ($query) use ($priceId) {
                 $query->where('price_id', $priceId);
             })
-            ->whereBetween('sales.created_at', [$from, $to])
+            ->whereDate('sales.created_at', '>=', $from)
+            ->whereDate('sales.created_at', '<=', $to)
             ->select(
                 'sales.created_at as date',
                 'jewelries.jewelry_code as jewelry_number',

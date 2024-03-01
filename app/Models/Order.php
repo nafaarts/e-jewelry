@@ -22,6 +22,7 @@ class Order extends Model
         'total_price',
         'paid_amount',
         'date_taken',
+        'estimated_date',
         'status',
         'created_by',
         'updated_by'

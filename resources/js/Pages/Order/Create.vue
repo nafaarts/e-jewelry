@@ -32,6 +32,7 @@ const form = useForm({
     total_price: "0",
     paid_amount: "",
     status: "PESANAN DIBUAT",
+    estimated_date: "",
     remarks: ""
 });
 
@@ -170,12 +171,21 @@ watch(costumer, (value) => form.costumer_id = value.id)
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-6">
-                            <div class="w-full space-y-6">
+                            <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="paid_amount" value="Jumlah Dibayarkan" />
                                     <CurrencyInput id="paid_amount" class="mt-1 block w-full" v-model="form.paid_amount"
                                         autocomplete="paid_amount" placeholder="Masukan jumlah dibayarkan" />
                                     <InputError class="mt-2" :message="form.errors.paid_amount" />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div>
+                                    <InputLabel for="estimated_date" value="Estimasi Tanggal Selesai" />
+                                    <TextInput id="estimated_date" type="date" class="mt-1 block w-full"
+                                        v-model="form.estimated_date" autocomplete="estimated_date"
+                                        placeholder="Masukan Estimasi Tanggal Selesai" />
+                                    <InputError class="mt-2" :message="form.errors.estimated_date" />
                                 </div>
                             </div>
                         </div>

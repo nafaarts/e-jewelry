@@ -25,7 +25,6 @@ const getCostumer = debounce((query) => {
     axiosInstance.get(`/api/costumer?search=${query}`)
         .then(response => {
             costumers.value = response.data
-            console.log(response.data);
         })
         .catch(error => {
             console.error(error.response.status, error.response.data.message)

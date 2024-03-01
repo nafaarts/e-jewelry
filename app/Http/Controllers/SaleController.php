@@ -6,6 +6,7 @@ use App\Models\Jewelry;
 use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Sale;
+use App\Rules\MaxLines;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
@@ -61,6 +62,7 @@ class SaleController extends Controller
     {
         $request->validate([
             'costumer_id' => 'required',
+            'remarks' => ['nullable', new MaxLines(5)],
         ], [
             'costumer_id.required' => 'Data kostumer wajib diisi.'
         ]);
@@ -78,6 +80,7 @@ class SaleController extends Controller
 
         foreach ($request->items ?? [] as $item) {
             Jewelry::find($item['id'])->update([
+                'safe_box_id' => null,
                 'status' => 'SOLD'
             ]);
 

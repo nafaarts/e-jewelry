@@ -32,17 +32,17 @@ watch(
 <template>
     <AuthenticatedLayout>
 
-        <Head title="Service" />
+        <Head title="Perbaikan" />
 
         <template #header>
             <div class="flex justify-between">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Service
+                    Perbaikan
                 </h2>
                 <Link as="button" :href="route('services.create')"
                     class="bg-orange-200 hover:bg-orange-300 transition px-2 py-1 uppercase text-xs rounded">
                 <i class="fas fa-fw fa-plus"></i>
-                Tambah Service
+                Tambah Perbaikan
                 </Link>
             </div>
         </template>
@@ -54,7 +54,7 @@ watch(
                 <template #head>
                     <tr>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Kode Service
+                            Kode Perbaikan
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kostumer

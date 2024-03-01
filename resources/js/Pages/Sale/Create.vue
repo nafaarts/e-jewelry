@@ -35,6 +35,18 @@ const form = useForm({
 });
 
 const addItem = (data) => {
+    // check if item size is not more than 5
+    if (form.items.length >= 5) {
+        Swal.fire({
+            title: "Opps",
+            icon: "warning",
+            text: "Item tidak bisa lebih dari 5!",
+            ...SwalConfig,
+        });
+        return;
+    }
+
+
     let check = form.items.find(o => o.jewelry_code === data.jewelry_code);
     if (!check) {
         form.items.push(data);
@@ -54,7 +66,6 @@ const addItem = (data) => {
 const onAddItem = () => {
     axiosInstance.get(`/api/jewelry?code=${jewelry_code.value}`)
         .then(response => {
-            console.log(response);
             addItem(response.data.data)
         })
         .catch(error => {

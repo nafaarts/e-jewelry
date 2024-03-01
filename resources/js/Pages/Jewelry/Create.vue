@@ -8,6 +8,7 @@ import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Select from "@/Components/Select.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PercentCheckbox from "@/Components/PercentCheckbox.vue";
 import FileInput from "@/Components/FileInput.vue";
 import { useForm } from "@inertiajs/vue3";
 import { reactive, ref, watch } from "vue";
@@ -40,15 +41,17 @@ const form = useForm({
     jewelry_code: props.jewelry_code,
     weight: "",
     cost: "",
+    is_percent_cost: Boolean(props.order?.is_percent_cost ?? false),
     photo: null,
     status: "READY",
     remarks: "",
 });
 
 const priceReactive = reactive({
-    price: String(props.order?.saved_price.id),
+    price: String(props.order?.saved_price.id ?? ""),
     weight: String(props.order?.weight),
-    cost: String(props.order?.cost)
+    cost: String(props.order?.cost),
+    is_percent_cost: Boolean(props.order?.is_percent_cost ?? false)
 });
 
 const onSubmit = () => {
@@ -71,17 +74,19 @@ const onUpdateImage = (e) => {
     imagePreview.value = URL.createObjectURL(file);
 };
 
-const updatePrice = ({ price, weight, cost }) => {
+const updatePrice = ({ price, weight, cost, is_percent_cost }) => {
     form.price_id = price;
     form.weight = weight;
     form.cost = cost;
+    form.is_percent_cost = is_percent_cost;
 
-    if (price) {
+    if (price !== "" && weight !== "") {
         const selectedPrice = props.prices.filter((item) => item.id == price)[0];
         let getPrice =
             (weight / selectedPrice.weight) *
             (selectedPrice.sell_price + selectedPrice.cost);
-        if (cost) getPrice += parseInt(cost.replace(",", ""));
+
+        if (cost) getPrice += (is_percent_cost) ? getPrice * (parseInt(cost) / 100) : parseInt(cost.replace(",", ""));
 
         const roundedPrice = Math.floor(getPrice / 1000) * 1000;
         totalPrice.value = currencyFormatter.format(roundedPrice);
@@ -92,11 +97,12 @@ if (props.order) {
     updatePrice({
         price: String(props.order.saved_price.id),
         weight: String(props.order.weight),
-        cost: String(props.order.cost)
+        cost: String(props.order.cost),
+        is_percent_cost: Boolean(props.order?.is_percent_cost ?? false)
     })
 }
 
-watch(priceReactive, ({ price, weight, cost }) => updatePrice({ price, weight, cost }));
+watch(priceReactive, (data) => updatePrice(data));
 </script>
 
 <template>
@@ -165,11 +171,17 @@ watch(priceReactive, ({ price, weight, cost }) => updatePrice({ price, weight, c
 
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
-                                <div>
-                                    <InputLabel for="cost" value="Ongkos" />
-                                    <CurrencyInput id="cost" class="mt-1 block w-full" v-model="priceReactive.cost"
-                                        autocomplete="cost" placeholder="Masukan ongkos (jika ada)" />
-                                    <InputError class="mt-2" :message="form.errors.cost" />
+                                <div class="flex gap-2 ">
+                                    <div class="flex-1">
+                                        <InputLabel for="cost" value="Ongkos" />
+                                        <CurrencyInput id="cost" class="mt-1 block w-full" v-model="priceReactive.cost"
+                                            autocomplete="cost" placeholder="Masukan ongkos (jika ada)" />
+                                        <InputError class="mt-2" :message="form.errors.cost" />
+                                    </div>
+                                    <div class="mt-7">
+                                        <PercentCheckbox id="is_percent_cost"
+                                            v-model:checked="priceReactive.is_percent_cost" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">

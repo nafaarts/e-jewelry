@@ -18,6 +18,7 @@ use App\Models\Costumer;
 use App\Models\Jewelry;
 use App\Models\Supplier;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -38,13 +39,20 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $jewelriesCount = Jewelry::count();
+    $soldJewelriesCount = Jewelry::where('status', 'READY')->count();
     $suppliersCount = Supplier::count();
     $employeesCount = User::whereNot('role', 'ADMIN')->count();
     $costumersCount = Costumer::count();
 
     return Inertia::render(
         'Dashboard',
-        compact('jewelriesCount', 'suppliersCount', 'employeesCount', 'costumersCount')
+        compact(
+            'jewelriesCount',
+            'soldJewelriesCount',
+            'suppliersCount',
+            'employeesCount',
+            'costumersCount'
+        )
     );
 })->middleware(['auth', 'verified'])->name('dashboard');
 

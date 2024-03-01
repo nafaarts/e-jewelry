@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Price;
+use App\Rules\MaxLines;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -50,6 +51,11 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        // preg_match_all('/(\r\n|\r|\n)/', $request->remarks, $matches);
+        // $num_lines = count($matches[0]) + 1;
+
+        // dd($num_lines);
+
         $request->validate([
             'costumer_id' => 'required',
             'price_id' => 'required',
@@ -58,12 +64,19 @@ class OrderController extends Controller
             'cost' => 'nullable',
             'total_price' => 'required',
             'paid_amount' => 'required',
+            'estimated_date' => 'required',
             'status' => 'required',
-            'remarks' => 'nullable|max:255',
+            'remarks' => ['nullable', 'max:255', new MaxLines(10)],
         ], [
-            'costumer_id.required' => 'Data kostumer wajib diisi.',
-            'category_id.required' => 'Kategori wajib diisi.',
-            'price_id.required' => 'Kadar dan Harga wajib diisi.'
+            'costumer_id.required' => 'Pelanggan wajib diisi',
+            'price_id.required' => 'Harga wajib diisi',
+            'category_id.required' => 'Kategori wajib diisi',
+            'weight.required' => 'Berat wajib diisi',
+            'total_price.required' => 'Total harga wajib diisi',
+            'paid_amount.required' => 'Jumlah bayar wajib diisi.',
+            'estimated_date.required' => 'Tanggal estimasi wajib diisi',
+            'status.required' => 'Status wajib diisi',
+            'remarks.max' => 'Maksimal 255 karakter',
         ]);
 
         $orderCode =  time() . str_pad(Order::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
@@ -77,6 +90,7 @@ class OrderController extends Controller
             'saved_price' => Price::findOrFail($request->price_id)->toJson(),
             'total_price' => str($request->total_price)->replace(',', '')->toInteger(),
             'paid_amount' => str($request->paid_amount)->replace(',', '')->toInteger(),
+            'estimated_date' => $request->estimated_date,
             'status' => $request->status,
             'remarks' => $request->remarks,
             'created_by' => auth()->id(),
@@ -127,6 +141,11 @@ class OrderController extends Controller
         } elseif ($request->type == 'paid-full') {
             $order->update([
                 'paid_amount' => $order->total_price,
+                'updated_by' => auth()->id()
+            ]);
+        } elseif ($request->type == 'taken') {
+            $order->update([
+                'date_taken' => now(),
                 'updated_by' => auth()->id()
             ]);
         }

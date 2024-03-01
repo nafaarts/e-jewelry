@@ -28,10 +28,14 @@ const paidForm = useForm({
     type: 'paid-full',
 });
 
+const takenForm = useForm({
+    type: 'taken',
+});
+
 const confirmDelete = (name) => {
     Swal.fire({
         title: "Konfirmasi",
-        html: `<span>Hapus data service <strong>${name}</strong> ?</span>`,
+        html: `<span>Hapus data perbaikan <strong>${name}</strong> ?</span>`,
         showCancelButton: true,
         cancelButtonText: "Tidak",
         confirmButtonText: "Ya",
@@ -44,6 +48,30 @@ const confirmDelete = (name) => {
                         title: "Berhasil",
                         icon: "success",
                         text: "Service berhasil dihapus!",
+                        ...SwalConfig,
+                    });
+                },
+            });
+        }
+    });
+};
+
+const confirmDateTaken = () => {
+    Swal.fire({
+        title: "Konfirmasi",
+        html: `<span>Apakah anda yakin mengkonfirmasi pengambilan service ini?</span>`,
+        showCancelButton: true,
+        cancelButtonText: "Tidak",
+        confirmButtonText: "Ya",
+        ...SwalConfig,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            takenForm.patch(route("services.update", props.service.id), {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: "Berhasil",
+                        icon: "success",
+                        text: "Service berhasil diambil!",
                         ...SwalConfig,
                     });
                 },
@@ -107,12 +135,12 @@ const confirmPaidFull = () => {
 <template>
     <AuthenticatedLayout>
 
-        <Head title="Detail Service" />
+        <Head title="Detail Perbaikan" />
 
         <template #header>
             <div class="flex justify-between">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Detail Service
+                    Detail Perbaikan
                 </h2>
             </div>
         </template>
@@ -122,7 +150,7 @@ const confirmPaidFull = () => {
                 <div class="w-full md:w-1/2 space-y-6">
                     <table class="text-left">
                         <tr>
-                            <th>Kode Service</th>
+                            <th>Kode Perbaikan</th>
                             <td class="px-3">:</td>
                             <td>
                                 <span class="font-bold">
@@ -163,6 +191,18 @@ const confirmPaidFull = () => {
                             <td class="px-3">:</td>
                             <td class="font-medium text-red-600">{{ currencyFormatter.format(service.cost -
                                 service.paid_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estimasi Selesai</th>
+                            <td class="px-3">:</td>
+                            <td>
+                                {{ service.estimated_date ? moment(service.estimated_date).format("DD MMMM YYYY") : '-' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tanggal Diambil</th>
+                            <td class="px-3">:</td>
+                            <td>{{ service.date_taken ? moment(service.date_taken).format("DD MMMM YYYY") : '-' }}</td>
                         </tr>
                         <tr>
                             <th>Status</th>
@@ -275,6 +315,10 @@ const confirmPaidFull = () => {
                 </SecondaryButton>
                 </Link>
                 <div class="flex flex-col md:flex-row gap-3">
+                    <SecondaryButton v-if="!service.date_taken && service.paid_amount === service.cost"
+                        @click="confirmDateTaken">
+                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi Pengambilan
+                    </SecondaryButton>
                     <SecondaryButton v-if="service.paid_amount !== service.cost" @click="confirmPaidFull">
                         <i class="fas fa-fw fa-check me-2"></i> Tetapkan Lunas
                     </SecondaryButton>

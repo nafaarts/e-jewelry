@@ -2,12 +2,13 @@
 import { Head } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Card from "@/Components/Card.vue";
-import PriceChart from "@/Chart/PriceChart.vue";
-import { currencyFormatter } from "@/utils/currencyFormatter";
-import moment from "moment";
+// import PriceChart from "@/Chart/PriceChart.vue";
+// import { currencyFormatter } from "@/utils/currencyFormatter";
+// import moment from "moment";
 
 defineProps({
     jewelriesCount: Number,
+    soldJewelriesCount: Number,
     suppliersCount: Number,
     employeesCount: Number,
     costumersCount: Number,
@@ -28,7 +29,10 @@ defineProps({
         <div class="flex flex-col md:flex-row w-full gap-3">
             <div class="flex gap-3 w-full md:w-1/2">
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Barang">
-                    <h4 class="text-2xl">{{ jewelriesCount }}</h4>
+                    <div class="flex gap-1 items-end">
+                        <h4 class="text-2xl">{{ soldJewelriesCount }}</h4>
+                        <span class="text-gray-400">/ {{ jewelriesCount }}</span>
+                    </div>
                 </Card>
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Supplier">
                     <h4 class="text-2xl">{{ suppliersCount }}</h4>

@@ -10,4 +10,9 @@ class SafeBox extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'remarks'];
+
+    public function jewelries()
+    {
+        return $this->hasMany(Jewelry::class);
+    }
 }

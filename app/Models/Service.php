@@ -18,6 +18,8 @@ class Service extends Model
         'cost',
         'paid_amount',
         'remarks',
+        'date_taken',
+        'estimated_date',
         'status',
         'created_by',
         'updated_by',
