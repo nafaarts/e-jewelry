@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1,
         ]);
 
-        for ($i = 0; $i < 5; $i++) {
-            \App\Models\User::factory()->create();
-        }
+        // for ($i = 0; $i < 5; $i++) {
+        //     \App\Models\User::factory()->create();
+        // }
     }
 }

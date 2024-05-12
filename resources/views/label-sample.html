@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f0f0;
+        }
+
+        .label-container {
+            width: 80mm;
+            height: 24mm;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .label-container .label {
+            width: 20mm;
+            height: 100%;
+            background: #fff;
+        }
+
+        .label-container .label .label-barcode {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px dotted gray;
+        }
+
+        .label-container .label .label-detail {
+            width: 100%;
+            height: 50%;
+            font-size: 8px;
+            padding: 5px 10px;
+        }
+
+        .label-container .label .label-detail p {
+            margin-bottom: 2px;
+        }
+    </style>
+
+    <script src=" https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js "></script>
+</head>
+
+<body>
+    <div class="label-container">
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="label-container">
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="label-container">
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+
+        <div class="label">
+            <div class="label-barcode">
+                <svg id="barcode"></svg>
+            </div>
+            <div class="label-detail">
+                <p>Antam 0.5</p>
+                <p>0.50 Gr</p>
+                <p>24K</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        JsBarcode("#barcode", "12345678", {
+            width: 0.8,
+            height: 20,
+            format: "CODE128",
+            displayValue: true,
+            fontSize: 8,
+            margin: 2,
+            lineColor: "#000"
+        });
+    </script>
+</body>
+
+</html>

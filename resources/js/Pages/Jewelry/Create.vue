@@ -26,10 +26,14 @@ const props = defineProps({
     suppliers: Array,
     safeboxes: Array,
     jewelry_code: String,
-    order: Object
+    order: Object,
 });
 
-const backRoute = ref(props.order ? route('orders.show', props.order?.id) : route('jewelries.index'))
+const backRoute = ref(
+    props.order
+        ? route("orders.show", props.order?.id)
+        : route("jewelries.index")
+);
 
 const form = useForm({
     price_id: "",
@@ -49,9 +53,9 @@ const form = useForm({
 
 const priceReactive = reactive({
     price: String(props.order?.saved_price.id ?? ""),
-    weight: String(props.order?.weight),
-    cost: String(props.order?.cost),
-    is_percent_cost: Boolean(props.order?.is_percent_cost ?? false)
+    weight: String(props.order?.weight ?? ""),
+    cost: String(props.order?.cost ?? ""),
+    is_percent_cost: Boolean(props.order?.is_percent_cost ?? false),
 });
 
 const onSubmit = () => {
@@ -80,26 +84,32 @@ const updatePrice = ({ price, weight, cost, is_percent_cost }) => {
     form.cost = cost;
     form.is_percent_cost = is_percent_cost;
 
-    if (price !== "" && weight !== "") {
-        const selectedPrice = props.prices.filter((item) => item.id == price)[0];
+    if (price) {
+        const selectedPrice = props.prices.find((item) => item.id == price);
+
         let getPrice =
             (weight / selectedPrice.weight) *
             (selectedPrice.sell_price + selectedPrice.cost);
 
-        if (cost) getPrice += (is_percent_cost) ? getPrice * (parseInt(cost) / 100) : parseInt(cost.replace(",", ""));
+        if (cost) {
+            getPrice += is_percent_cost
+                ? getPrice * (parseInt(cost) / 100)
+                : parseInt(cost.replace(",", ""));
+        }
 
         const roundedPrice = Math.floor(getPrice / 1000) * 1000;
+
         totalPrice.value = currencyFormatter.format(roundedPrice);
     }
-}
+};
 
 if (props.order) {
     updatePrice({
         price: String(props.order.saved_price.id),
         weight: String(props.order.weight),
         cost: String(props.order.cost),
-        is_percent_cost: Boolean(props.order?.is_percent_cost ?? false)
-    })
+        is_percent_cost: Boolean(props.order?.is_percent_cost ?? false),
+    });
 }
 
 watch(priceReactive, (data) => updatePrice(data));
@@ -107,7 +117,6 @@ watch(priceReactive, (data) => updatePrice(data));
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Tambah Barang" />
 
         <template #header>
@@ -125,18 +134,38 @@ watch(priceReactive, (data) => updatePrice(data));
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="jewelry_code" value="Kode Barang" />
-                                    <TextInput id="jewelry_code" type="text" class="mt-1 block w-full bg-zinc-100"
-                                        v-model="form.jewelry_code" readonly />
-                                    <InputError class="mt-2" :message="form.errors.jewelry_code" />
+                                    <InputLabel
+                                        for="jewelry_code"
+                                        value="Kode Barang"
+                                    />
+                                    <TextInput
+                                        id="jewelry_code"
+                                        type="text"
+                                        class="mt-1 block w-full bg-zinc-100"
+                                        v-model="form.jewelry_code"
+                                        readonly
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.jewelry_code"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="name" value="Nama" />
-                                    <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name"
-                                        autocomplete="name" placeholder="Masukan nama" />
-                                    <InputError class="mt-2" :message="form.errors.name" />
+                                    <TextInput
+                                        id="name"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.name"
+                                        autocomplete="name"
+                                        placeholder="Masukan nama"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.name"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -144,55 +173,98 @@ watch(priceReactive, (data) => updatePrice(data));
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="price_id" value="Kadar dan Harga" />
+                                    <InputLabel
+                                        for="price_id"
+                                        value="Kadar dan Harga"
+                                    />
                                     <Select v-model="priceReactive.price">
                                         <option value="">
                                             - Pilih Kadar dan Harga -
                                         </option>
-                                        <option v-for="price in prices" :key="price.id" :value="price.id">
+                                        <option
+                                            v-for="price in prices"
+                                            :key="price.id"
+                                            :value="price.id"
+                                        >
                                             {{
                                                 `${price.category} - ${price.carat} (${price.rate}%) | ${price.name}`
                                             }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.price_id" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.price_id"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="weight" value="Berat (gram)" />
-                                    <TextInput id="weight" type="number" class="mt-1 block w-full"
-                                        v-model="priceReactive.weight" autocomplete="weight" placeholder="Masukan berat"
-                                        step="0.000001" />
-                                    <InputError class="mt-2" :message="form.errors.weight" />
+                                    <InputLabel
+                                        for="weight"
+                                        value="Berat (gram)"
+                                    />
+                                    <TextInput
+                                        id="weight"
+                                        type="number"
+                                        class="mt-1 block w-full"
+                                        v-model="priceReactive.weight"
+                                        autocomplete="weight"
+                                        placeholder="Masukan berat"
+                                        step="0.000001"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.weight"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
-                                <div class="flex gap-2 ">
+                                <div class="flex gap-2">
                                     <div class="flex-1">
                                         <InputLabel for="cost" value="Ongkos" />
-                                        <CurrencyInput id="cost" class="mt-1 block w-full" v-model="priceReactive.cost"
-                                            autocomplete="cost" placeholder="Masukan ongkos (jika ada)" />
-                                        <InputError class="mt-2" :message="form.errors.cost" />
+                                        <CurrencyInput
+                                            id="cost"
+                                            class="mt-1 block w-full"
+                                            v-model="priceReactive.cost"
+                                            autocomplete="cost"
+                                            placeholder="Masukan ongkos (jika ada)"
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="form.errors.cost"
+                                        />
                                     </div>
                                     <div class="mt-7">
-                                        <PercentCheckbox id="is_percent_cost"
-                                            v-model:checked="priceReactive.is_percent_cost" />
+                                        <PercentCheckbox
+                                            id="is_percent_cost"
+                                            v-model:checked="
+                                                priceReactive.is_percent_cost
+                                            "
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="totalPrice" value="Harga" />
-                                    <TextInput id="totalPrice" class="mt-1 block w-full bg-zinc-100" v-model="totalPrice"
-                                        readonly />
-                                    <small v-show="props.order" class="text-zinc-500">*harga ditampilkan
-                                        berdasarkan
-                                        'Harga dan Kadar'
-                                        sekarang.</small>
+                                    <InputLabel
+                                        for="totalPrice"
+                                        value="Harga"
+                                    />
+                                    <TextInput
+                                        id="totalPrice"
+                                        class="mt-1 block w-full bg-zinc-100"
+                                        v-model="totalPrice"
+                                        readonly
+                                    />
+                                    <small
+                                        v-show="props.order"
+                                        class="text-zinc-500"
+                                        >*harga ditampilkan berdasarkan 'Harga
+                                        dan Kadar' sekarang.</small
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -200,30 +272,50 @@ watch(priceReactive, (data) => updatePrice(data));
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="supplier_id" value="Supplier" />
+                                    <InputLabel
+                                        for="supplier_id"
+                                        value="Supplier"
+                                    />
                                     <Select v-model="form.supplier_id">
                                         <option value="">
                                             - Pilih supplier -
                                         </option>
-                                        <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                                        <option
+                                            v-for="supplier in suppliers"
+                                            :key="supplier.id"
+                                            :value="supplier.id"
+                                        >
                                             {{ supplier.name }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.supplier_id" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.supplier_id"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="safe_box_id" value="Brankas" />
+                                    <InputLabel
+                                        for="safe_box_id"
+                                        value="Brankas"
+                                    />
                                     <Select v-model="form.safe_box_id">
                                         <option value="">
                                             - Pilih brankas -
                                         </option>
-                                        <option v-for="safebox in safeboxes" :key="safebox.id" :value="safebox.id">
+                                        <option
+                                            v-for="safebox in safeboxes"
+                                            :key="safebox.id"
+                                            :value="safebox.id"
+                                        >
                                             {{ safebox.name }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.safe_box_id" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.safe_box_id"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -239,21 +331,34 @@ watch(priceReactive, (data) => updatePrice(data));
                                         <option value="READY">TERSEDIA</option>
                                         <option value="SOLD">TERJUAL</option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.status" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.status"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="category_id" value="Kategori" />
+                                    <InputLabel
+                                        for="category_id"
+                                        value="Kategori"
+                                    />
                                     <Select v-model="form.category_id">
                                         <option value="">
                                             - Pilih kategori -
                                         </option>
-                                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                                        <option
+                                            v-for="category in categories"
+                                            :key="category.id"
+                                            :value="category.id"
+                                        >
                                             {{ category.name }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.category_id" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.category_id"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -261,9 +366,16 @@ watch(priceReactive, (data) => updatePrice(data));
                         <div>
                             <InputLabel for="remarks" value="Catatan" />
 
-                            <TextareaInput id="remarks" name="remarks" v-model="form.remarks"
-                                placeholder="Tinggalkan catatan..." />
-                            <InputError class="mt-2" :message="form.errors.remarks" />
+                            <TextareaInput
+                                id="remarks"
+                                name="remarks"
+                                v-model="form.remarks"
+                                placeholder="Tinggalkan catatan..."
+                            />
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.remarks"
+                            />
                         </div>
                     </div>
 
@@ -272,17 +384,32 @@ watch(priceReactive, (data) => updatePrice(data));
 
                         <label for="photo" class="block mb-3">
                             <div class="w-full p-1 border rounded-md">
-                                <img :src="imagePreview" alt="preview" class="w-full" />
+                                <img
+                                    :src="imagePreview"
+                                    alt="preview"
+                                    class="w-full"
+                                />
                             </div>
                         </label>
 
-                        <FileInput id="photo" accept="image/*" class="mt-1 block w-full" @input="onUpdateImage" />
+                        <FileInput
+                            id="photo"
+                            accept="image/*"
+                            class="mt-1 block w-full"
+                            @input="onUpdateImage"
+                        />
 
-                        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                        <progress
+                            v-if="form.progress"
+                            :value="form.progress.percentage"
+                            max="100"
+                        >
                             {{ form.progress.percentage }}%
                         </progress>
 
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                        <p
+                            class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                        >
                             SVG, PNG, JPG or GIF (MAX. 5MB).
                         </p>
 
@@ -295,9 +422,12 @@ watch(priceReactive, (data) => updatePrice(data));
                         Simpan
                     </PrimaryButton>
                     <Link :href="backRoute">
-                    <SecondaryButton type="reset" :disabled="form.processing">
-                        Kembali
-                    </SecondaryButton>
+                        <SecondaryButton
+                            type="reset"
+                            :disabled="form.processing"
+                        >
+                            Kembali
+                        </SecondaryButton>
                     </Link>
                 </div>
             </form>

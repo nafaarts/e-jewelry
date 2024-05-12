@@ -7,6 +7,7 @@ use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Sale;
 use App\Rules\MaxLines;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
@@ -30,6 +31,14 @@ class SaleController extends Controller
                 ->withCount('items')
                 ->latest()
                 ->paginate(10)
+                ->through(function ($sale) {
+                    if ($sale->is_percent_discount) {
+                        $sale->discount = $sale->total_amount * $sale->discount / 100;
+                    }
+
+                    $sale->total_amount_with_discount = $sale->total_amount - $sale->discount;
+                    return $sale;
+                })
                 ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
@@ -62,21 +71,28 @@ class SaleController extends Controller
     {
         $request->validate([
             'costumer_id' => 'required',
+            'items' => 'required|array|min:1',
+            'items.*.id' => 'required|exists:jewelries,id',
+            'discount' => 'nullable|numeric',
             'remarks' => ['nullable', new MaxLines(5)],
         ], [
             'costumer_id.required' => 'Data kostumer wajib diisi.'
         ]);
 
-        $sale_number = time() . str_pad(Sale::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $sale_number = generateInvoiceNumber('sale');
 
-        $sale = Sale::create([
+        $data = [
             'costumer_id' => $request->costumer_id,
             'sale_number' => $sale_number,
+            'discount' => $request->discount,
+            'is_percent_discount' => $request->is_percent_discount,
             'total_amount' => $request->total_amount,
             'remarks' => $request->remarks,
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
-        ]);
+        ];
+
+        $sale = Sale::create($data);
 
         foreach ($request->items ?? [] as $item) {
             Jewelry::find($item['id'])->update([
@@ -181,9 +197,11 @@ class SaleController extends Controller
             ];
         });
 
-        return inertia('Sale/Print', [
+        return Pdf::loadView('invoice/sale', [
             'sale' => $sale,
             'config' => $config
-        ]);
+        ])
+            ->setPaper($config['invoice_sale_paper_size'], 'portrait')
+            ->stream(env('APP_NAME') . '.pdf');
     }
 }

@@ -70,18 +70,21 @@ const print = () => window.print();
                         <tr>
                             <td class="report-content-cell">
                                 <div class="main">
+
                                     <template v-for="price in prices">
                                         <h5 v-text="price.name" class="mb-3 italic" />
                                         <table class="w-full mb-8 text-left" id="table-content">
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 15%;" class="border p-1 bg-orange-200">Tanggal</th>
+                                                    <th style="width: 15%;" class="border p-1 bg-orange-200">Tanggal
+                                                    </th>
                                                     <th style="width: 15%;" class="border p-1 bg-orange-200">Kode Barang
                                                     </th>
                                                     <th style="width: 35%;" class="border p-1 bg-orange-200">Nama barang
                                                     </th>
                                                     <th style="width: 5%;" class="border p-1 bg-orange-200">Qty</th>
-                                                    <th style="width: 15%;" class="border p-1 bg-orange-200">Berat (gram)
+                                                    <th style="width: 15%;" class="border p-1 bg-orange-200">Berat
+                                                        (gram)
                                                     </th>
                                                     <th style="width: 15%;" class="border p-1 bg-orange-200">Kadar</th>
                                                 </tr>
@@ -89,8 +92,9 @@ const print = () => window.print();
                                             <tbody>
                                                 <template v-if="price.soldItems?.length > 0">
                                                     <tr v-for="jewelry in price.soldItems" :key="jewelry.id">
-                                                        <td class="border p-1">{{ moment(jewelry.date).format('DD-MM-YYYY')
-                                                        }}
+                                                        <td class="border p-1">{{
+                        moment(jewelry.date).format('DD-MM-YYYY')
+                    }}
                                                         </td>
                                                         <td class="border p-1">{{ jewelry.jewelry_number }}</td>
                                                         <td class="border p-1">{{ jewelry.jewelry_name }}</td>
@@ -102,10 +106,11 @@ const print = () => window.print();
                                                         <td colspan="3" class="border p-1 text-right">
                                                             <small class="font-medium">Sub Total</small>
                                                         </td>
-                                                        <td class="border p-1 text-center">{{ price.soldItems.length }}</td>
+                                                        <td class="border p-1 text-center">{{ price.soldItems.length }}
+                                                        </td>
                                                         <td colspan="2" class="border p-1 font-medium">
                                                             {{
-                                                                price.soldItems.reduce((acc, item) => acc + item.weight, 0)
+                        price.soldItems.reduce((acc, item) => acc + item.weight, 0)
                                                             }}
                                                         </td>
                                                     </tr>

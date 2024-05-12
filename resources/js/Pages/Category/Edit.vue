@@ -36,6 +36,7 @@ const onSubmit = () => {
 
 <template>
     <AuthenticatedLayout>
+
         <Head title="Edit Kategori" />
 
         <template #header>
@@ -50,26 +51,16 @@ const onSubmit = () => {
             <form @submit.prevent="onSubmit" class="space-y-6">
                 <div>
                     <InputLabel for="name" value="Nama" />
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.name"
-                        autocomplete="name"
-                        placeholder="Masukan nama"
-                    />
+                    <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="name"
+                        placeholder="Masukan nama" autofocus />
                     <InputError class="mt-2" :message="form.errors.name" />
                 </div>
 
                 <div>
                     <InputLabel for="remarks" value="Catatan" />
 
-                    <TextareaInput
-                        id="remarks"
-                        name="remarks"
-                        v-model="form.remarks"
-                        placeholder="Tinggalkan catatan..."
-                    />
+                    <TextareaInput id="remarks" name="remarks" v-model="form.remarks"
+                        placeholder="Tinggalkan catatan..." />
                     <InputError class="mt-2" :message="form.errors.remarks" />
                 </div>
 
@@ -78,12 +69,9 @@ const onSubmit = () => {
                         Simpan
                     </PrimaryButton>
                     <Link :href="route('categories.index')">
-                        <SecondaryButton
-                            type="reset"
-                            :disabled="form.processing"
-                        >
-                            Kembali
-                        </SecondaryButton>
+                    <SecondaryButton type="reset" :disabled="form.processing">
+                        Kembali
+                    </SecondaryButton>
                     </Link>
                 </div>
             </form>

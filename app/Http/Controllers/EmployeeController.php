@@ -37,7 +37,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        $employeeCode =  time() . str_pad(User::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $employeeCode = generateItemNumber('employee');
         return inertia('Employee/Create', [
             'employee_code' => $employeeCode
         ]);

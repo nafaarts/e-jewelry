@@ -33,6 +33,8 @@ use Inertia\Inertia;
 |
 */
 
+Route::view('/test-serial-port', 'serial-sample');
+
 Route::get('/', function () {
     return to_route('dashboard');
 });

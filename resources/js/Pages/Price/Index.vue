@@ -92,6 +92,9 @@ const confirmDelete = (id, date) => {
                             Harga Beli
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                            Jumlah barang
+                        </th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kategori
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
@@ -103,7 +106,7 @@ const confirmDelete = (id, date) => {
                     </tr>
                 </template>
                 <tr v-if="prices.data.length == 0">
-                    <td colspan="8" class="px-4 py-14 text-center">
+                    <td colspan="7" class="px-4 py-14 text-center">
                         <p>Tidak ada data!</p>
                     </td>
                 </tr>
@@ -140,6 +143,9 @@ const confirmDelete = (id, date) => {
                         </div>
                     </td>
                     <td class="px-4 py-2">
+                        {{ price.jewelries_count }} barang
+                    </td>
+                    <td class="px-4 py-2">
                         <div class="text-gray-900 whitespace-nowrap">
                             {{ price.category }}
                         </div>
@@ -163,6 +169,7 @@ const confirmDelete = (id, date) => {
                                 <i class="fas fa-fw fa-edit"></i>
                             </Link>
                             <button
+                                :disabled="price.jewelries_count > 0"
                                 @click="
                                     confirmDelete(
                                         price.id,
@@ -171,7 +178,11 @@ const confirmDelete = (id, date) => {
                                         )
                                     )
                                 "
-                                class="p-1 transition bg-red-600 hover:bg-red-700 text-white rounded"
+                                :class="{
+                                    'p-1 transition bg-red-600 hover:bg-red-700 text-white rounded disabled:bg-red-400': true,
+                                    'cursor-not-allowed':
+                                        price.jewelries_count > 0,
+                                }"
                             >
                                 <i class="fas fa-fw fa-trash"></i>
                             </button>

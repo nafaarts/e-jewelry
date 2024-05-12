@@ -26,6 +26,7 @@ class PriceController extends Controller
                         ->orWhere('remarks', 'like', "%{$search}%")
                         ->orWhere('created_at', 'like', "%{$search}%");
                 })
+                ->withCount('jewelries')
                 ->orderBy('sell_price', 'DESC')
                 ->paginate(10)
                 ->withQueryString(),

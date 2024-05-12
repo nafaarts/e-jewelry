@@ -34,7 +34,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        $supplierCode =  time() . str_pad(Supplier::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $supplierCode =  generateItemNumber('supplier');
         return inertia('Supplier/Create', [
             'supplier_code' => $supplierCode
         ]);

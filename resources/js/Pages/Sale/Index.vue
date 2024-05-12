@@ -51,6 +51,7 @@ watch(
 
         <div class="bg-white overflow-hidden sm:rounded-lg border">
             <Table>
+
                 <template #head>
                     <tr>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
@@ -89,16 +90,14 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <p class="flex gap-1 w-fit max-w-xs truncate">
-                            <span class="font-bold">{{ currencyFormatter.format(sale.total_amount) }}</span>
+                            <span class="font-bold">
+                                {{ currencyFormatter.format(sale.total_amount_with_discount) }}
+                            </span>
                             <span>({{ sale.items_count }} item)</span>
                         </p>
                     </td>
                     <td class="px-4 py-2">
-                        {{
-                            moment(sale.created_at).format(
-                                "DD MMMM YYYY HH:mm"
-                            )
-                        }}
+                        {{ moment(sale.created_at).format("DD MMMM YYYY HH:mm") }}
                     </td>
                     <td class="px-4 py-2">
                         <div class="flex gap-3">

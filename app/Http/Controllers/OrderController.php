@@ -79,7 +79,7 @@ class OrderController extends Controller
             'remarks.max' => 'Maksimal 255 karakter',
         ]);
 
-        $orderCode =  time() . str_pad(Order::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $orderCode = generateInvoiceNumber('order');
 
         $data = [
             'costumer_id' => $request->costumer_id,
@@ -146,6 +146,7 @@ class OrderController extends Controller
         } elseif ($request->type == 'taken') {
             $order->update([
                 'date_taken' => now(),
+                'status' => 'SUDAH DIAMBIL',
                 'updated_by' => auth()->id()
             ]);
         }

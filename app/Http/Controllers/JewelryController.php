@@ -28,7 +28,7 @@ class JewelryController extends Controller
                         ->orWhere('status', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(15)
                 ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);
@@ -39,7 +39,7 @@ class JewelryController extends Controller
      */
     public function create(Request $request)
     {
-        $jewelryCode =  time() . str_pad(Jewelry::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $jewelryCode = generateItemNumber('jewelry');
 
         $order = Order::find($request->order_id);
         if ($order) {
@@ -92,6 +92,8 @@ class JewelryController extends Controller
                 'jewelry_id' => $jewelry->id,
                 'status' => 'SELESAI'
             ]);
+
+            return to_route('orders.show', $validated['order_id']);
         }
 
         return to_route('jewelries.index');

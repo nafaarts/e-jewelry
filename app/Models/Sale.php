@@ -16,6 +16,8 @@ class Sale extends Model
     protected $fillable = [
         'costumer_id',
         'sale_number',
+        'discount',
+        'is_percent_discount',
         'total_amount',
         'remarks',
         'created_by',

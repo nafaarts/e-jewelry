@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
             'address' => 'required'
         ]);
 
-        $validated['costumer_code'] = time() . str_pad(Costumer::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $validated['costumer_code'] = generateItemNumber('costumer');
 
         return Costumer::create($validated);
     });

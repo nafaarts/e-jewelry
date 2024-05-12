@@ -68,7 +68,7 @@ class ServiceController extends Controller
             'paid_amount.required' => 'Jumlah bayar wajib diisi.',
         ]);
 
-        $serviceNumber = time() . str_pad(Service::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
+        $serviceNumber = generateInvoiceNumber('service');
 
         $validated['cost'] = str($validated['cost'])->replace(',', '')->toInteger();
 
@@ -125,6 +125,7 @@ class ServiceController extends Controller
         } elseif ($request->type == 'taken') {
             $service->update([
                 'date_taken' => now(),
+                'status' => 'SUDAH DIAMBIL',
                 'updated_by' => auth()->id()
             ]);
         }

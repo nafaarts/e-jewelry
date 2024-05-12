@@ -3,15 +3,27 @@ import InvoiceWrapper from '@/Components/Invoice/InvoiceWrapper.vue';
 import moment from 'moment';
 import { currencyFormatter } from "@/utils/currencyFormatter";
 import Table from '@/Components/Table.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     sale: Object,
     config: Object
 })
 
+console.log(props.sale);
+
+const discountPrice = computed(() => {
+    if (props.sale.is_percent_discount) {
+        return props.sale.total_amount * (props.sale.discount / 100);
+    }
+
+    return props.sale.discount;
+});
+
 </script>
 
 <template>
+
     <Head :title="'Pembelian | #' + sale.sale_number" />
 
     <InvoiceWrapper :size="config.invoice_sale_paper_size" :backRoute="route('sales.show', sale.id)">
@@ -106,11 +118,27 @@ const props = defineProps({
                         </td>
                     </tr>
 
-                    <tr>
-                        <td colspan="2" class="p-1 border border-gray-500"></td>
-                        <td colspan="2" class="p-1 border border-gray-500 text-center">Total</td>
+                    <tr v-show="sale.discount > 0">
+                        <td colspan="4" class="p-1 border border-gray-500 text-right">Total</td>
                         <td class="p-1 border border-gray-500 text-center">
-                            <span class="text-md font-bold">{{ currencyFormatter.format(sale.total_amount) }}</span>
+                            <span class="text-md">{{ currencyFormatter.format(sale.total_amount) }}</span>
+                        </td>
+                    </tr>
+                    <tr v-show="sale.discount > 0">
+                        <td colspan="4" class="p-1 border border-gray-500 text-right">Discount
+                            <span v-if="sale.is_percent_discount">
+                                ({{ sale.discount }}%)
+                            </span>
+                        </td>
+                        <td class="p-1 border border-gray-500 text-center">
+                            <span class="text-md">{{ currencyFormatter.format(discountPrice) }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="p-1 border border-gray-500 text-right">Total Harga</td>
+                        <td class="p-1 border border-gray-500 text-center">
+                            <span class="text-md font-bold">{{ currencyFormatter.format(sale.total_amount -
+        discountPrice) }}</span>
                         </td>
                     </tr>
                 </table>
