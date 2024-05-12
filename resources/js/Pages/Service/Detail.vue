@@ -9,27 +9,27 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import { currencyFormatter } from "@/utils/currencyFormatter";
 import status from "@/Constant/ServiceStatus";
-import { ref } from 'vue'
+import { ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 
 const props = defineProps({
     service: Object,
-})
+});
 
-const updateStatus = ref(false)
+const updateStatus = ref(false);
 
 const form = useForm({
-    type: 'status',
+    type: "status",
     status: props.service.status,
 });
 
 const paidForm = useForm({
-    type: 'paid-full',
+    type: "paid-full",
 });
 
 const takenForm = useForm({
-    type: 'taken',
+    type: "taken",
 });
 
 const confirmDelete = (name) => {
@@ -128,13 +128,11 @@ const confirmPaidFull = () => {
             });
         }
     });
-}
-
+};
 </script>
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Detail Perbaikan" />
 
         <template #header>
@@ -145,7 +143,9 @@ const confirmPaidFull = () => {
             </div>
         </template>
 
-        <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4 mb-4">
+        <div
+            class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4 mb-4"
+        >
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="w-full md:w-1/2 space-y-6">
                     <table class="text-left">
@@ -171,16 +171,26 @@ const confirmPaidFull = () => {
                         <tr>
                             <th>Biaya/Ongkos</th>
                             <td class="px-3">:</td>
-                            <td>{{ currencyFormatter.format(service.cost) }}</td>
+                            <td>
+                                {{ currencyFormatter.format(service.cost) }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Total dibayar</th>
                             <td class="px-3">:</td>
                             <td>
                                 <div class="flex gap-2">
-                                    <span>{{ currencyFormatter.format(service.paid_amount) }}</span>
-                                    <div class="flex items-center bg-green-500 rounded text-white px-2"
-                                        v-if="service.paid_amount === service.cost">
+                                    <span>{{
+                                        currencyFormatter.format(
+                                            service.paid_amount
+                                        )
+                                    }}</span>
+                                    <div
+                                        class="flex items-center bg-green-500 rounded text-white px-2"
+                                        v-if="
+                                            service.paid_amount === service.cost
+                                        "
+                                    >
                                         <small>Lunas</small>
                                     </div>
                                 </div>
@@ -189,20 +199,39 @@ const confirmPaidFull = () => {
                         <tr v-if="service.paid_amount !== service.cost">
                             <th>Total sisa</th>
                             <td class="px-3">:</td>
-                            <td class="font-medium text-red-600">{{ currencyFormatter.format(service.cost -
-                                service.paid_amount) }}</td>
+                            <td class="font-medium text-red-600">
+                                {{
+                                    currencyFormatter.format(
+                                        service.cost - service.paid_amount
+                                    )
+                                }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Estimasi Selesai</th>
                             <td class="px-3">:</td>
                             <td>
-                                {{ service.estimated_date ? moment(service.estimated_date).format("DD MMMM YYYY") : '-' }}
+                                {{
+                                    service.estimated_date
+                                        ? moment(service.estimated_date).format(
+                                              "DD MMMM YYYY"
+                                          )
+                                        : "-"
+                                }}
                             </td>
                         </tr>
                         <tr>
                             <th>Tanggal Diambil</th>
                             <td class="px-3">:</td>
-                            <td>{{ service.date_taken ? moment(service.date_taken).format("DD MMMM YYYY") : '-' }}</td>
+                            <td>
+                                {{
+                                    service.date_taken
+                                        ? moment(service.date_taken).format(
+                                              "DD MMMM YYYY"
+                                          )
+                                        : "-"
+                                }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Status</th>
@@ -210,8 +239,12 @@ const confirmPaidFull = () => {
                             <td>
                                 <div class="flex gap-2">
                                     <span>{{ service.status }}</span>
-                                    <button @click="() => updateStatus = !updateStatus"
-                                        class="text-orange-400 hover:text-orange-600 cursor-pointer">
+                                    <button
+                                        @click="
+                                            () => (updateStatus = !updateStatus)
+                                        "
+                                        class="text-orange-400 hover:text-orange-600 cursor-pointer"
+                                    >
                                         <i class="fas fa-fw fa-edit"></i>
                                     </button>
                                 </div>
@@ -222,18 +255,26 @@ const confirmPaidFull = () => {
                     <div v-if="updateStatus" class="space-y-3">
                         <InputLabel for="status" value="Status" />
                         <Select v-model="form.status">
-                            <option value="">
-                                - Pilih status -
-                            </option>
-                            <option v-for="(item, index) in status" :key="index" :value="item">
+                            <option value="">- Pilih status -</option>
+                            <option
+                                v-for="(item, index) in status"
+                                :key="index"
+                                :value="item"
+                            >
                                 {{ item }}
                             </option>
                         </Select>
                         <div class="flex gap-2">
-                            <PrimaryButton type="button" @click="confirmStatusUpdate">
+                            <PrimaryButton
+                                type="button"
+                                @click="confirmStatusUpdate"
+                            >
                                 <i class="fas fa-fw fa-check"></i>
                             </PrimaryButton>
-                            <SecondaryButton type="button" @click="() => updateStatus = false">
+                            <SecondaryButton
+                                type="button"
+                                @click="() => (updateStatus = false)"
+                            >
                                 <i class="fas fw-fw fa-times"></i>
                             </SecondaryButton>
                         </div>
@@ -263,7 +304,9 @@ const confirmPaidFull = () => {
                         <tr>
                             <th>Nomor Indentitas</th>
                             <td class="px-3">:</td>
-                            <td>{{ service.costumer?.indentity_number ?? '-' }}</td>
+                            <td>
+                                {{ service.costumer?.indentity_number ?? "-" }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Nomor Telepon</th>
@@ -279,24 +322,28 @@ const confirmPaidFull = () => {
 
                     <table class="text-left">
                         <tr>
-                            <th>Dibuat pada: </th>
+                            <th>Dibuat pada:</th>
                             <td class="px-3">:</td>
                             <td>
-                                {{ moment(service.created_at).format(
-                                    "DD MMMM YYYY HH:mm"
-                                ) }}
+                                {{
+                                    moment(service.created_at).format(
+                                        "DD MMMM YYYY HH:mm"
+                                    )
+                                }}
                                 <span class="text-gray-600">
                                     ({{ service.created_by?.name }})
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <th>Diupdate pada: </th>
+                            <th>Diupdate pada:</th>
                             <td class="px-3">:</td>
                             <td>
-                                {{ moment(service.updated_at).format(
-                                    "DD MMMM YYYY HH:mm"
-                                ) }}
+                                {{
+                                    moment(service.updated_at).format(
+                                        "DD MMMM YYYY HH:mm"
+                                    )
+                                }}
                                 <span class="text-gray-600">
                                     ({{ service.updated_by?.name }})
                                 </span>
@@ -307,33 +354,51 @@ const confirmPaidFull = () => {
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4">
+        <div
+            class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4"
+        >
             <div class="flex flex-col md:flex-row justify-between gap-3">
                 <Link :href="route('services.index')">
-                <SecondaryButton class="w-full h-full">
-                    <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i> <span class="md:hidden">Kembali</span>
-                </SecondaryButton>
+                    <SecondaryButton class="w-full h-full">
+                        <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i>
+                        <span class="md:hidden">Kembali</span>
+                    </SecondaryButton>
                 </Link>
                 <div class="flex flex-col md:flex-row gap-3">
-                    <SecondaryButton v-if="!service.date_taken && service.paid_amount === service.cost"
-                        @click="confirmDateTaken">
-                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi Pengambilan
+                    <SecondaryButton
+                        v-if="
+                            !service.date_taken &&
+                            service.paid_amount === service.cost
+                        "
+                        @click="confirmDateTaken"
+                    >
+                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi
+                        Pengambilan
                     </SecondaryButton>
-                    <SecondaryButton v-if="service.paid_amount !== service.cost" @click="confirmPaidFull">
+                    <SecondaryButton
+                        v-if="service.paid_amount !== service.cost"
+                        @click="confirmPaidFull"
+                    >
                         <i class="fas fa-fw fa-check me-2"></i> Tetapkan Lunas
                     </SecondaryButton>
-                    <Link :href="route('services.print', service.id)">
-                    <SecondaryButton class="w-full">
-                        <i class="fas fa-fw fa-download me-2"></i> Cetak Faktur
-                    </SecondaryButton>
-                    </Link>
-                    <DangerButton @click="confirmDelete(service?.service_number)"
-                        v-if="$page.props.auth.user.role === 'ADMIN'">
-                        <i class="fas fa-fw fa-trash me-2 md:m-0"></i> <span class="md:hidden">Hapus</span>
+                    <a
+                        :href="route('services.print', service.id)"
+                        target="_blank"
+                    >
+                        <SecondaryButton class="w-full">
+                            <i class="fas fa-fw fa-download me-2"></i> Cetak
+                            Faktur
+                        </SecondaryButton>
+                    </a>
+                    <DangerButton
+                        @click="confirmDelete(service?.service_number)"
+                        v-if="$page.props.auth.user.role === 'ADMIN'"
+                    >
+                        <i class="fas fa-fw fa-trash me-2 md:m-0"></i>
+                        <span class="md:hidden">Hapus</span>
                     </DangerButton>
                 </div>
             </div>
         </div>
-
     </AuthenticatedLayout>
 </template>

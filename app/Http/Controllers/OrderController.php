@@ -7,6 +7,7 @@ use App\Models\Meta;
 use App\Models\Order;
 use App\Models\Price;
 use App\Rules\MaxLines;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -173,9 +174,11 @@ class OrderController extends Controller
             'invoice_order_header_image', 'invoice_order_paper_size', 'invoice_order_note'
         ])->pluck('value', 'key');
 
-        return inertia('Order/Print', [
+        return Pdf::loadView('invoice/order', [
             'order' => $order,
             'config' => $config
-        ]);
+        ])
+            ->setPaper($config['invoice_order_paper_size'], 'portrait')
+            ->stream(env('APP_NAME') . '.pdf');
     }
 }

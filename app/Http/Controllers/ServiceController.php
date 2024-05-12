@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Meta;
 use App\Models\Service;
 use App\Rules\MaxLines;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -153,9 +154,11 @@ class ServiceController extends Controller
             'invoice_service_header_image', 'invoice_service_paper_size', 'invoice_service_note'
         ])->pluck('value', 'key');
 
-        return inertia('Service/Print', [
+        return Pdf::loadView('invoice/service', [
             'service' => $service,
             'config' => $config
-        ]);
+        ])
+            ->setPaper($config['invoice_service_paper_size'], 'portrait')
+            ->stream(env('APP_NAME') . '.pdf');
     }
 }

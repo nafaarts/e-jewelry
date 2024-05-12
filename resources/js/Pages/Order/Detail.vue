@@ -8,28 +8,28 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import { currencyFormatter } from "@/utils/currencyFormatter";
-import { ref } from 'vue'
+import { ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import status from "@/Constant/OrderStatus";
 
 const props = defineProps({
     order: Object,
-})
+});
 
-const updateStatus = ref(false)
+const updateStatus = ref(false);
 
 const form = useForm({
-    type: 'status',
+    type: "status",
     status: props.order.status,
 });
 
 const paidForm = useForm({
-    type: 'paid-full',
+    type: "paid-full",
 });
 
 const takenForm = useForm({
-    type: 'taken',
+    type: "taken",
 });
 
 const confirmPaidFull = () => {
@@ -54,7 +54,7 @@ const confirmPaidFull = () => {
             });
         }
     });
-}
+};
 
 const confirmDateTaken = () => {
     Swal.fire({
@@ -78,8 +78,7 @@ const confirmDateTaken = () => {
             });
         }
     });
-
-}
+};
 
 const confirmStatusUpdate = () => {
     Swal.fire({
@@ -91,7 +90,10 @@ const confirmStatusUpdate = () => {
         ...SwalConfig,
     }).then((result) => {
         if (result.isConfirmed) {
-            if (['SELESAI'].includes(form.status) && (props.order.jewelry === null)) {
+            if (
+                ["SELESAI"].includes(form.status) &&
+                props.order.jewelry === null
+            ) {
                 Swal.fire({
                     title: "Gagal",
                     icon: "error",
@@ -145,7 +147,6 @@ const confirmDelete = (name) => {
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Detail Tempahan" />
 
         <template #header>
@@ -156,7 +157,9 @@ const confirmDelete = (name) => {
             </div>
         </template>
 
-        <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4 mb-4">
+        <div
+            class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4 mb-4"
+        >
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="w-full md:w-1/2 space-y-6">
                     <table class="text-left">
@@ -172,7 +175,7 @@ const confirmDelete = (name) => {
                         <tr>
                             <th>Kategori</th>
                             <td class="px-3">:</td>
-                            <td>{{ order.category?.name ?? '-' }}</td>
+                            <td>{{ order.category?.name ?? "-" }}</td>
                         </tr>
                         <tr>
                             <th>Berat Perhiasan</th>
@@ -182,10 +185,21 @@ const confirmDelete = (name) => {
                         <tr>
                             <th>Biaya/Ongkos</th>
                             <td class="px-3">:</td>
-                            <td>{{ currencyFormatter.format((order.weight / order.saved_price.weight) *
-                                (order.saved_price.sell_price + order.saved_price.cost)) }}
+                            <td>
+                                {{
+                                    currencyFormatter.format(
+                                        (order.weight /
+                                            order.saved_price.weight) *
+                                            (order.saved_price.sell_price +
+                                                order.saved_price.cost)
+                                    )
+                                }}
                                 <span v-if="order.cost" class="text-gray-500">
-                                    {{ `+ ${currencyFormatter.format(order.cost)}` }}
+                                    {{
+                                        `+ ${currencyFormatter.format(
+                                            order.cost
+                                        )}`
+                                    }}
                                 </span>
                             </td>
                         </tr>
@@ -194,9 +208,18 @@ const confirmDelete = (name) => {
                             <td class="px-3">:</td>
                             <td>
                                 <div class="flex gap-2">
-                                    <span>{{ currencyFormatter.format(order.paid_amount) }}</span>
-                                    <div class="flex items-center bg-green-500 rounded text-white px-2"
-                                        v-if="order.paid_amount === order.total_price">
+                                    <span>{{
+                                        currencyFormatter.format(
+                                            order.paid_amount
+                                        )
+                                    }}</span>
+                                    <div
+                                        class="flex items-center bg-green-500 rounded text-white px-2"
+                                        v-if="
+                                            order.paid_amount ===
+                                            order.total_price
+                                        "
+                                    >
                                         <small>Lunas</small>
                                     </div>
                                 </div>
@@ -205,18 +228,39 @@ const confirmDelete = (name) => {
                         <tr v-if="order.paid_amount !== order.total_price">
                             <th>Total sisa</th>
                             <td class="px-3">:</td>
-                            <td class="font-medium text-red-600">{{ currencyFormatter.format(order.total_price -
-                                order.paid_amount) }}</td>
+                            <td class="font-medium text-red-600">
+                                {{
+                                    currencyFormatter.format(
+                                        order.total_price - order.paid_amount
+                                    )
+                                }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Estimasi Selesai</th>
                             <td class="px-3">:</td>
-                            <td>{{ order.estimated_date ? moment(order.estimated_date).format("DD MMMM YYYY") : '-' }}</td>
+                            <td>
+                                {{
+                                    order.estimated_date
+                                        ? moment(order.estimated_date).format(
+                                              "DD MMMM YYYY"
+                                          )
+                                        : "-"
+                                }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Tanggal Diambil</th>
                             <td class="px-3">:</td>
-                            <td>{{ order.date_taken ? moment(order.date_taken).format("DD MMMM YYYY") : '-' }}</td>
+                            <td>
+                                {{
+                                    order.date_taken
+                                        ? moment(order.date_taken).format(
+                                              "DD MMMM YYYY"
+                                          )
+                                        : "-"
+                                }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Status</th>
@@ -224,9 +268,19 @@ const confirmDelete = (name) => {
                             <td>
                                 <div class="flex gap-2">
                                     <span>{{ order.status }}</span>
-                                    <button @click="() => updateStatus = !updateStatus"
-                                        class="text-orange-400 hover:text-orange-600 cursor-pointer">
-                                        <i :class="`fas fa-fw fa-${updateStatus ? 'arrow-down' : 'edit'}`"></i>
+                                    <button
+                                        @click="
+                                            () => (updateStatus = !updateStatus)
+                                        "
+                                        class="text-orange-400 hover:text-orange-600 cursor-pointer"
+                                    >
+                                        <i
+                                            :class="`fas fa-fw fa-${
+                                                updateStatus
+                                                    ? 'arrow-down'
+                                                    : 'edit'
+                                            }`"
+                                        ></i>
                                     </button>
                                 </div>
                             </td>
@@ -236,18 +290,26 @@ const confirmDelete = (name) => {
                     <div v-if="updateStatus" class="space-y-3">
                         <InputLabel for="status" value="Status" />
                         <Select v-model="form.status">
-                            <option value="">
-                                - Pilih status -
-                            </option>
-                            <option v-for="(item, index) in status" :key="index" :value="item">
+                            <option value="">- Pilih status -</option>
+                            <option
+                                v-for="(item, index) in status"
+                                :key="index"
+                                :value="item"
+                            >
                                 {{ item }}
                             </option>
                         </Select>
                         <div class="flex gap-2">
-                            <PrimaryButton type="button" @click="confirmStatusUpdate">
+                            <PrimaryButton
+                                type="button"
+                                @click="confirmStatusUpdate"
+                            >
                                 <i class="fas fa-fw fa-check"></i>
                             </PrimaryButton>
-                            <SecondaryButton type="button" @click="() => updateStatus = false">
+                            <SecondaryButton
+                                type="button"
+                                @click="() => (updateStatus = false)"
+                            >
                                 <i class="fas fw-fw fa-times"></i>
                             </SecondaryButton>
                         </div>
@@ -277,7 +339,9 @@ const confirmDelete = (name) => {
                         <tr>
                             <th>Nomor Indentitas</th>
                             <td class="px-3">:</td>
-                            <td>{{ order.costumer?.indentity_number ?? '-' }}</td>
+                            <td>
+                                {{ order.costumer?.indentity_number ?? "-" }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Nomor Telepon</th>
@@ -293,24 +357,28 @@ const confirmDelete = (name) => {
 
                     <table class="text-left">
                         <tr>
-                            <th>Dibuat pada: </th>
+                            <th>Dibuat pada:</th>
                             <td class="px-3">:</td>
                             <td>
-                                {{ moment(order.created_at).format(
-                                    "DD MMMM YYYY HH:mm"
-                                ) }}
+                                {{
+                                    moment(order.created_at).format(
+                                        "DD MMMM YYYY HH:mm"
+                                    )
+                                }}
                                 <span class="text-gray-600">
                                     ({{ order.created_by?.name }})
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <th>Diupdate pada: </th>
+                            <th>Diupdate pada:</th>
                             <td class="px-3">:</td>
                             <td>
-                                {{ moment(order.updated_at).format(
-                                    "DD MMMM YYYY HH:mm"
-                                ) }}
+                                {{
+                                    moment(order.updated_at).format(
+                                        "DD MMMM YYYY HH:mm"
+                                    )
+                                }}
                                 <span class="text-gray-600">
                                     ({{ order.updated_by?.name }})
                                 </span>
@@ -322,49 +390,90 @@ const confirmDelete = (name) => {
         </div>
 
         <div class="flex flex-col md:flex-row gap-4 mb-4">
-            <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 w-full md:w-1/2 space-y-4">
+            <div
+                class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 w-full md:w-1/2 space-y-4"
+            >
                 <h2 class="font-bold">Riwayat Harga dan Kadar</h2>
                 <table class="text-left">
                     <tr>
                         <th>Kadar</th>
                         <td class="px-3">:</td>
-                        <td>{{ order.saved_price.name }} - {{ order.saved_price.carat }} ({{ order.saved_price.rate }}%)
+                        <td>
+                            {{ order.saved_price.name }} -
+                            {{ order.saved_price.carat }} ({{
+                                order.saved_price.rate
+                            }}%)
                         </td>
                     </tr>
                     <tr>
                         <th>Berat</th>
                         <td class="px-3">:</td>
-                        <td>{{ order.saved_price.weight }} Gr <span class="text-gray-500">/ {{ order.saved_price.category
-                        }}</span></td>
+                        <td>
+                            {{ order.saved_price.weight }} Gr
+                            <span class="text-gray-500"
+                                >/ {{ order.saved_price.category }}</span
+                            >
+                        </td>
                     </tr>
                     <tr>
                         <th>Harga Jual</th>
                         <td class="px-3">:</td>
-                        <td>{{ currencyFormatter.format(order.saved_price.sell_price + order.saved_price?.cost) }}</td>
+                        <td>
+                            {{
+                                currencyFormatter.format(
+                                    order.saved_price.sell_price +
+                                        order.saved_price?.cost
+                                )
+                            }}
+                        </td>
                     </tr>
                     <tr>
                         <th>Diupdate pada</th>
                         <td class="px-3">:</td>
-                        <td>{{ moment(order.saved_price.updated_at).format(
-                            "DD MMMM YYYY HH:mm"
-                        ) }}</td>
+                        <td>
+                            {{
+                                moment(order.saved_price.updated_at).format(
+                                    "DD MMMM YYYY HH:mm"
+                                )
+                            }}
+                        </td>
                     </tr>
                 </table>
             </div>
-            <div class="flex flex-col bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 w-full md:w-1/2 space-y-4">
+            <div
+                class="flex flex-col bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 w-full md:w-1/2 space-y-4"
+            >
                 <div class="flex justify-between items-center">
                     <h2 class="font-bold">Detail Barang</h2>
-                    <Link as="small" v-show="order.jewelry !== null" :href="route('sales.create', {
-                        order_id: order.id
-                    })" class="text-gray-500 hover:text-orange-400 cursor-pointer">
-                    Checkout <i class="fas fa-fw fa-arrow-right"></i>
+                    <Link
+                        as="small"
+                        v-show="order.jewelry !== null"
+                        :href="
+                            route('sales.create', {
+                                order_id: order.id,
+                            })
+                        "
+                        class="text-gray-500 hover:text-orange-400 cursor-pointer"
+                    >
+                        Checkout <i class="fas fa-fw fa-arrow-right"></i>
                     </Link>
                 </div>
-                <div v-if="order.jewelry !== null"
-                    class="flex-1 flex gap-2 border p-2 border-gray-200 bg-gray-50 rounded-md mb-2">
-                    <div class="hidden md:flex items-center justify-center overflow-hidden">
-                        <img :src="order.jewelry.photo ? `/storage/${order.jewelry.photo}` : '/images/image-placeholder.png'"
-                            class="h-20 rounded aspect-square" alt="jewelry">
+                <div
+                    v-if="order.jewelry !== null"
+                    class="flex-1 flex gap-2 border p-2 border-gray-200 bg-gray-50 rounded-md mb-2"
+                >
+                    <div
+                        class="hidden md:flex items-center justify-center overflow-hidden"
+                    >
+                        <img
+                            :src="
+                                order.jewelry.photo
+                                    ? `/storage/${order.jewelry.photo}`
+                                    : '/images/image-placeholder.png'
+                            "
+                            class="h-20 rounded aspect-square"
+                            alt="jewelry"
+                        />
                     </div>
                     <div class="flex items-center">
                         <table class="text-left">
@@ -381,25 +490,43 @@ const confirmDelete = (name) => {
                             <tr>
                                 <th>Berat dan Kadar</th>
                                 <td class="px-3">:</td>
-                                <td>{{ order.jewelry.weight }} Gr / {{ order.saved_price.name }} - {{
-                                    order.jewelry.price.carat }} ({{
-        order.jewelry.price.rate }}%)</td>
+                                <td>
+                                    {{ order.jewelry.weight }} Gr /
+                                    {{ order.saved_price.name }} -
+                                    {{ order.jewelry.price.carat }} ({{
+                                        order.jewelry.price.rate
+                                    }}%)
+                                </td>
                             </tr>
                         </table>
                     </div>
                 </div>
 
-                <div v-else class="flex-1 flex flex-col justify-between items-start">
+                <div
+                    v-else
+                    class="flex-1 flex flex-col justify-between items-start"
+                >
                     <div class="flex flex-col">
-                        <small class="text-gray-500">Belum ada barang ditambahkan.</small>
-                        <small class="text-gray-500">tekan <strong>tombol dibawah</strong> untuk menambahkan barang.</small>
+                        <small class="text-gray-500"
+                            >Belum ada barang ditambahkan.</small
+                        >
+                        <small class="text-gray-500"
+                            >tekan <strong>tombol dibawah</strong> untuk
+                            menambahkan barang.</small
+                        >
                     </div>
-                    <Link as="button" :href="route('jewelries.create', {
-                        order_id: order.id
-                    })" v-if="$page.props.auth.user.role === 'ADMIN'"
-                        class="bg-gray-200 hover:bg-gray-300 transition px-2 py-1 uppercase text-xs rounded">
-                    <i class="fas fa-fw fa-plus"></i>
-                    Tambah Barang dan Konfirmasi Selesai
+                    <Link
+                        as="button"
+                        :href="
+                            route('jewelries.create', {
+                                order_id: order.id,
+                            })
+                        "
+                        v-if="$page.props.auth.user.role === 'ADMIN'"
+                        class="bg-gray-200 hover:bg-gray-300 transition px-2 py-1 uppercase text-xs rounded"
+                    >
+                        <i class="fas fa-fw fa-plus"></i>
+                        Tambah Barang dan Konfirmasi Selesai
                     </Link>
                     <small v-else class="text-red-500">
                         <i class="fas fa-fw fa-warning"></i>
@@ -409,32 +536,48 @@ const confirmDelete = (name) => {
             </div>
         </div>
 
-        <div class=" bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4">
+        <div
+            class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-4"
+        >
             <div class="flex flex-col md:flex-row justify-between gap-3">
                 <Link :href="route('orders.index')">
-                <SecondaryButton class="w-full h-full">
-                    <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i> <span class="md:hidden">Kembali</span>
-                </SecondaryButton>
+                    <SecondaryButton class="w-full h-full">
+                        <i class="fas fa-fw fa-arrow-left me-2 md:m-0"></i>
+                        <span class="md:hidden">Kembali</span>
+                    </SecondaryButton>
                 </Link>
                 <div class="flex flex-col md:flex-row gap-3">
-                    <SecondaryButton v-if="!order.date_taken && order.paid_amount === order.total_price"
-                        @click="confirmDateTaken">
-                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi Pengambilan
+                    <SecondaryButton
+                        v-if="
+                            !order.date_taken &&
+                            order.paid_amount === order.total_price
+                        "
+                        @click="confirmDateTaken"
+                    >
+                        <i class="fas fa-fw fa-hand me-2"></i> Konfirmasi
+                        Pengambilan
                     </SecondaryButton>
-                    <SecondaryButton v-if="order.paid_amount !== order.total_price" @click="confirmPaidFull">
+                    <SecondaryButton
+                        v-if="order.paid_amount !== order.total_price"
+                        @click="confirmPaidFull"
+                    >
                         <i class="fas fa-fw fa-check me-2"></i> Tetapkan Lunas
                     </SecondaryButton>
-                    <Link :href="route('orders.print', order.id)">
-                    <SecondaryButton class="w-full md:w-fit">
-                        <i class="fas fa-fw fa-download me-2"></i> Cetak Faktur
-                    </SecondaryButton>
-                    </Link>
-                    <DangerButton @click="confirmDelete(order?.order_number)" v-if="$page.props.auth.user.role === 'ADMIN'">
-                        <i class="fas fa-fw fa-trash me-2 md:m-0"></i> <span class="md:hidden">Hapus</span>
+                    <a :href="route('orders.print', order.id)" target="_blank">
+                        <SecondaryButton class="w-full md:w-fit">
+                            <i class="fas fa-fw fa-download me-2"></i> Cetak
+                            Faktur
+                        </SecondaryButton>
+                    </a>
+                    <DangerButton
+                        @click="confirmDelete(order?.order_number)"
+                        v-if="$page.props.auth.user.role === 'ADMIN'"
+                    >
+                        <i class="fas fa-fw fa-trash me-2 md:m-0"></i>
+                        <span class="md:hidden">Hapus</span>
                     </DangerButton>
                 </div>
             </div>
         </div>
-
     </AuthenticatedLayout>
 </template>

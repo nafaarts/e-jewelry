@@ -16,7 +16,7 @@
         }
 
         @page {
-            size: A4;
+            size: "{{ $config['invoice_sale_paper_size'] }}";
             margin: 0;
         }
 
@@ -94,6 +94,10 @@
         .white-space-preline {
             white-space: pre-line;
         }
+
+        .text-10 {
+            font-size: 10px;
+        }
     </style>
 </head>
 
@@ -102,7 +106,7 @@
         <img style="width: 100%; height: auto;"
             src="{{ convertImageToBase64('storage/' . $config['invoice_sale_header_image']) }}" alt="header">
 
-        <div style="padding: 20px 40px;">
+        <div style="{{ $config['invoice_sale_paper_size'] == 'A4' ? 'padding: 20px 40px;' : 'padding: 10px 20px;' }}">
             <h1 class="text-md font-bold my-3 text-center underline">PEMBELIAN</h1>
 
             <table class="w-full">
@@ -235,10 +239,10 @@
 
             <div style="width: 100%; margin-top: 50px">
                 <div style="margin-bottom: 1rem">
-                    <h3 class="text-xs font-bold mb-2">Perhatian:</h3>
-                    <p class="text-xs text-grey white-space-preline">{{ $config['invoice_sale_note'] }}</p>
+                    <h3 class="text-10 font-bold mb-2">Perhatian:</h3>
+                    <p class="text-10 text-grey white-space-preline">{{ $config['invoice_sale_note'] }}</p>
                 </div>
-                <i class="text-xs text-grey ">{{ now()->format('Y/m/d H:i:s') }} | {{ auth()->user()->name }}</i>
+                <i class="text-10 text-grey ">{{ now()->format('Y/m/d H:i:s') }} | {{ auth()->user()->name }}</i>
             </div>
 
         </div>
