@@ -19,6 +19,8 @@ class JewelryController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order, 'jewelry_code');
+
         return inertia('Jewelry/Index', [
             'jewelries' => Jewelry::query()
                 ->with('price', 'category')
@@ -27,8 +29,8 @@ class JewelryController extends Controller
                         ->orWhere('jewelry_code', 'like', "%{$search}%")
                         ->orWhere('status', 'like', "%{$search}%");
                 })
-                ->latest()
-                ->paginate(15)
+                ->orderBy($sorting['column'], $sorting['direction'])
+                ->paginate(12)
                 ->appends($request->all()),
             'filters' => $request->only(['search']),
         ]);

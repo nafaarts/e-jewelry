@@ -17,22 +17,26 @@ if (!function_exists('generateItemNumber')) {
         switch ($type) {
             case 'jewelry':
                 $prefix = '1';
-                $lastItem = Jewelry::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->count();
+                $lastItem = Jewelry::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->first();
+                $lastItem = $lastItem ? (int) substr($lastItem->jewelry_code, -3) : 0;
                 break;
 
             case 'employee':
                 $prefix = '2';
-                $lastItem = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->where('role', 'SALES')->count();
+                $lastItem = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->where('role', 'SALES')->first();
+                $lastItem = $lastItem ? (int) substr($lastItem->user_code, -3) : 0;
                 break;
 
             case 'costumer':
                 $prefix = '3';
-                $lastItem = Costumer::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->count();
+                $lastItem = Costumer::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->first();
+                $lastItem = $lastItem ? (int) substr($lastItem->costumer_code, -3) : 0;
                 break;
 
             case 'supplier':
                 $prefix = '4';
-                $lastItem = Supplier::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->count();
+                $lastItem = Supplier::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->first();
+                $lastItem = $lastItem ? (int) substr($lastItem->supplier_code, -3) : 0;
                 break;
 
             default:
@@ -43,6 +47,9 @@ if (!function_exists('generateItemNumber')) {
 
         $date = now()->format('my');
         $lastItem = str_pad($lastItem + 1, 3, '0', STR_PAD_LEFT);
+
+        // dd($lastItem);
+
         return $date . $prefix .  $lastItem;
     }
 }
@@ -91,5 +98,22 @@ if (!function_exists('convertImageToBase64')) {
         $type = pathinfo($imagePath, PATHINFO_EXTENSION);
         $data = file_get_contents($imagePath);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+}
+
+if (!function_exists('getOrderTable')) {
+    function getOrderTable($order, $defaultColumn, $defaultDirection = 'DESC'): array
+    {
+        $column = $defaultColumn;
+        $direction = $defaultDirection;
+
+        if ($order) {
+            $sign = $order[0];
+            $column = ltrim($order, '+-');
+            $column = str_replace('.', '_', $column);
+            $direction = $sign === '-' ? 'ASC' : 'DESC';
+        }
+
+        return compact('column', 'direction');
     }
 }

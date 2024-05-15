@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CostumerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JewelryController;
+use App\Http\Controllers\LabelGeneratorController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
@@ -90,6 +91,9 @@ Route::middleware('auth')->group(function () {
     // Report
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/report/result', [ReportController::class, 'result'])->name('report.result');
+
+    // Label Generator
+    Route::get('/label-generator', LabelGeneratorController::class)->name('label-generator');
 
     // Setting
     Route::get('/setting', [SettingController::class, 'index'])->name('setting');

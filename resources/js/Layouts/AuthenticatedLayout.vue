@@ -278,10 +278,10 @@ if (page.props.flash.message) {
                             :active="route().current('report*')"
                         />
                         <SidebarLink
-                            :link="route('report.index')"
+                            :link="route('label-generator')"
                             label="Cetak Label"
                             icon="barcode"
-                            :active="false"
+                            :active="route().current('label-generator')"
                         />
                         <SidebarLink
                             :link="route('setting')"
