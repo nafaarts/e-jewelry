@@ -233,6 +233,7 @@ watch(costumer, (value) => {
                                     autocomplete="jewelry_code"
                                     placeholder="Masukan kode barang"
                                     autofocus
+                                    @change="onAddItem"
                                 />
 
                                 <PrimaryButton
