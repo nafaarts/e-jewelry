@@ -7,6 +7,7 @@ use App\Models\Meta;
 use App\Models\Service;
 use App\Rules\MaxLines;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Closure;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -55,7 +56,11 @@ class ServiceController extends Controller
             'category_id' => 'required',
             'weight' => 'required',
             'cost' => 'required',
-            'paid_amount' => 'required',
+            'paid_amount' => ['required',  function (string $attribute, mixed $value, Closure $fail) use ($request) {
+                if (str($request->paid_amount)->replace(',', '')->toInteger() > str($request->cost)->replace(',', '')->toInteger()) {
+                    $fail("Jumlah dibayar tidak boleh lebih banyak dari harga biaya.");
+                }
+            }],
             'estimated_date' => 'required',
             'remarks' => ['nullable', new MaxLines(10)],
             'status' => 'required'

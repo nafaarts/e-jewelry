@@ -3,18 +3,16 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 import { Head } from "@inertiajs/vue3";
 import InvoiceSetting from "./Partials/Invoice/Index.vue";
-// import GeneralSetting from "./Partials/GeneralSetting.vue";
+// import DepositSetting from "./Partials/DepositSetting.vue";
 // import HardwareSetting from "./Partials/HardwareSetting.vue";
 
 const props = defineProps({
     invoices: Object,
 });
-
 </script>
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Pengaturan" />
 
         <template #header>
@@ -24,13 +22,13 @@ const props = defineProps({
         </template>
 
         <div class="space-y-6">
-            <!-- <div class="p-4 sm:p-8 bg-white border sm:rounded-lg">
-                <GeneralSetting />
-            </div> -->
-
             <div class="p-4 sm:p-8 bg-white border sm:rounded-lg">
                 <InvoiceSetting :data="invoices" />
             </div>
+
+            <!-- <div class="p-4 sm:p-8 bg-white border sm:rounded-lg">
+                <DepositSetting />
+            </div> -->
 
             <!-- <div class="p-4 sm:p-8 bg-white border sm:rounded-lg">
                 <HardwareSetting />

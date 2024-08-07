@@ -44,7 +44,7 @@ const onSubmit = () => {
             Swal.fire({
                 title: "Berhasil",
                 icon: "success",
-                text: "Kostumer berhasil di edit!",
+                text: "Kastamer berhasil di edit!",
                 ...SwalConfig,
             });
         },
@@ -54,12 +54,12 @@ const onSubmit = () => {
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Edit Kostumer" />
+        <Head title="Edit Kastamer" />
 
         <template #header>
             <div class="flex justify-between">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Edit Kostumer
+                    Edit Kastamer
                 </h2>
             </div>
         </template>

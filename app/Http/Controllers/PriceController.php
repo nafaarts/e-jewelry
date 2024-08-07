@@ -12,6 +12,8 @@ class PriceController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order, 'sell_price');
+
         return inertia('Price/Index', [
             'prices' => Price::query()
                 ->when($request->input('search'), function ($query, $search) {
@@ -27,7 +29,7 @@ class PriceController extends Controller
                         ->orWhere('created_at', 'like', "%{$search}%");
                 })
                 ->withCount('jewelries')
-                ->orderBy('sell_price', 'DESC')
+                ->orderBy($sorting['column'], $sorting['direction'])
                 ->paginate(10)
                 ->withQueryString(),
             'filters' => $request->only(['search']),

@@ -26,12 +26,10 @@ watch(
         });
     }, 500)
 );
-
 </script>
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Perbaikan" />
 
         <template #header>
@@ -39,10 +37,13 @@ watch(
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Perbaikan
                 </h2>
-                <Link as="button" :href="route('services.create')"
-                    class="bg-orange-200 hover:bg-orange-300 transition px-2 py-1 uppercase text-xs rounded">
-                <i class="fas fa-fw fa-plus"></i>
-                Tambah Perbaikan
+                <Link
+                    as="button"
+                    :href="route('services.create')"
+                    class="bg-orange-200 hover:bg-orange-300 transition px-2 py-1 uppercase text-xs rounded"
+                >
+                    <i class="fas fa-fw fa-plus"></i>
+                    Tambah Perbaikan
                 </Link>
             </div>
         </template>
@@ -55,6 +56,9 @@ watch(
                     <tr>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kode Perbaikan
+                        </th>
+                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
+                            Status
                         </th>
                         <th scope="col" class="px-4 py-3 whitespace-nowrap">
                             Kostumer
@@ -74,19 +78,27 @@ watch(
                     </tr>
                 </template>
                 <tr v-if="services.data.length == 0">
-                    <td colspan="6" class="px-4 py-14 text-center">
+                    <td colspan="7" class="px-4 py-14 text-center">
                         <p>Tidak ada data!</p>
                     </td>
                 </tr>
 
-                <tr class="bg-white border-b" v-for="service in services.data" :key="service.id">
+                <tr
+                    class="bg-white border-b"
+                    v-for="service in services.data"
+                    :key="service.id"
+                >
                     <td class="px-4 py-2">
-                        <div class="font-medium text-gray-900 whitespace-nowrap">
+                        <div
+                            class="font-medium text-gray-900 whitespace-nowrap"
+                        >
                             {{ service.service_number }}
                         </div>
-                        <div class="font-normal italic text-gray-500">
+                    </td>
+                    <td class="px-4 py-2">
+                        <p class="w-fit max-w-xs truncate">
                             {{ service.status }}
-                        </div>
+                        </p>
                     </td>
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-xs truncate">
@@ -100,12 +112,24 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <div v-if="service.paid_amount === service.cost">
-                            <div class="flex items-center bg-green-500 rounded text-white px-2 w-fit">
-                                <small><i class="fas fa-fw fa-check"></i> Lunas</small>
+                            <div
+                                class="flex items-center bg-green-500 rounded text-white px-2 w-fit"
+                            >
+                                <small
+                                    ><i class="fas fa-fw fa-check"></i>
+                                    Lunas</small
+                                >
                             </div>
                         </div>
-                        <p class="w-fit max-w-xs truncate font-medium text-red-600" v-else>
-                            {{ currencyFormatter.format(service.cost - service.paid_amount) }}
+                        <p
+                            class="w-fit max-w-xs truncate font-medium text-red-600"
+                            v-else
+                        >
+                            {{
+                                currencyFormatter.format(
+                                    service.cost - service.paid_amount
+                                )
+                            }}
                         </p>
                     </td>
                     <td class="px-4 py-2">
@@ -117,9 +141,12 @@ watch(
                     </td>
                     <td class="px-4 py-2">
                         <div class="flex gap-3">
-                            <Link as="button" :href="route('services.show', service)"
-                                class="py-1 px-2 transition bg-green-200 hover:bg-green-300 text-gray-900 rounded">
-                            <i class="fas fa-fw fa-eye"></i> Lihat
+                            <Link
+                                as="button"
+                                :href="route('services.show', service)"
+                                class="py-1 px-2 transition bg-green-200 hover:bg-green-300 text-gray-900 rounded"
+                            >
+                                <i class="fas fa-fw fa-eye"></i> Lihat
                             </Link>
                         </div>
                     </td>

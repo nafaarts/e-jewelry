@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('deposit_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('carat');
-            $table->string('rate');
-            $table->float('weight')->default(1);
-            $table->integer('sell_price')->default(0);
-            $table->integer('buy_price')->default(0);
-            $table->integer('cost')->default(0);
-            $table->string('category');
+            $table->foreignId('costumer_id')->nullable()->constrained('costumers')->nullOnDelete();
+            $table->string('account_number')->unique();
+            $table->boolean('is_active')->default(true);
             $table->string('remarks')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('deposit_accounts');
     }
 };

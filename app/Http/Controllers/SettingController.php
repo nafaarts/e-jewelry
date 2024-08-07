@@ -12,6 +12,7 @@ class SettingController extends Controller
          'invoice_service_header_image', 'invoice_service_paper_size', 'invoice_service_note',
          'invoice_order_header_image', 'invoice_order_paper_size', 'invoice_order_note',
          'invoice_sale_header_image', 'invoice_sale_paper_size', 'invoice_sale_note',
+         'invoice_deposit_header_image', 'invoice_deposit_paper_size', 'invoice_deposit_note',
       ];
       $metas = Meta::whereIn('key', $metaKeys)->pluck('value', 'key');
 
@@ -30,6 +31,11 @@ class SettingController extends Controller
             'header_image' => $metas['invoice_sale_header_image'] ?? null,
             'paper_size' => $metas['invoice_sale_paper_size'] ?? null,
             'note' => $metas['invoice_sale_note'] ?? null,
+         ],
+         'deposit' => [
+            'header_image' => $metas['invoice_deposit_header_image'] ?? null,
+            'paper_size' => $metas['invoice_deposit_paper_size'] ?? null,
+            'note' => $metas['invoice_deposit_note'] ?? null,
          ],
       ];
 

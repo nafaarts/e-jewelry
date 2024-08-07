@@ -12,12 +12,14 @@ class SafeBoxController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order);
+
         return inertia('SafeBox/Index', [
             'safeboxes' => SafeBox::query()
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
-                ->latest()
+                ->orderBy($sorting['column'], $sorting['direction'])
                 ->paginate(10)
                 ->withQueryString(),
             'filters' => $request->only(['search']),

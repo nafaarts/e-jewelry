@@ -13,6 +13,8 @@ class CostumerController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order);
+
         return inertia('Costumer/Index', [
             'costumers' => Costumer::query()
                 ->when($request->input('search'), function ($query, $search) {
@@ -22,7 +24,7 @@ class CostumerController extends Controller
                         ->orWhere('phone_number', 'like', "%{$search}%")
                         ->orWhere('address', 'like', "%{$search}%");
                 })
-                ->latest()
+                ->orderBy($sorting['column'], $sorting['direction'])
                 ->paginate(10)
                 ->withQueryString(),
             'filters' => $request->only(['search']),

@@ -14,6 +14,8 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order);
+
         return inertia('Employee/Index', [
             'users' => User::query()
                 ->when($request->input('search'), function ($query, $search) {
@@ -25,7 +27,7 @@ class EmployeeController extends Controller
                         ->orWhere('address', 'like', "%{$search}%");
                 })
                 ->where('role', 'SALES')
-                ->latest()
+                ->orderBy($sorting['column'], $sorting['direction'])
                 ->paginate(10)
                 ->withQueryString(),
             'filters' => $request->only(['search']),

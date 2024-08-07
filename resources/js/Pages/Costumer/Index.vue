@@ -5,24 +5,30 @@ import Pagination from "@/Components/Pagination.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import ImageCover from "@/Components/ImageCover.vue";
 import { router } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, watch } from "vue";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
 import Swal from "sweetalert2";
 import SwalConfig from "@/utils/sweetalert.conf";
+import TableHeader from "@/Components/TableHeader.vue";
 
 let props = defineProps({
     costumers: Object,
     filters: Object,
 });
 
-let search = ref(props.filters?.search || "");
+const filters = reactive({
+    search: props.filters?.search ?? "",
+    order: props.filters?.order ?? "",
+});
 
 watch(
-    search,
+    filters,
     debounce(function (value) {
-        let data = value === "" ? {} : { search: value };
+        const data = ["search", "order"].reduce((acc, key) => {
+            return value[key] ? { ...acc, [key]: value[key] } : acc;
+        }, {});
         router.get(route("costumers.index"), data, {
             preserveState: true,
             replace: true,
@@ -45,7 +51,7 @@ const confirmDelete = (id, name) => {
                     Swal.fire({
                         title: "Berhasil",
                         icon: "success",
-                        text: "Kostumer berhasil dihapus!",
+                        text: "Kastamer berhasil dihapus!",
                         ...SwalConfig,
                     });
                 },
@@ -57,12 +63,12 @@ const confirmDelete = (id, name) => {
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Kostumer" />
+        <Head title="Kastamer" />
 
         <template #header>
             <div class="flex justify-between">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Kostumer
+                    Kastamer
                 </h2>
                 <Link
                     as="button"
@@ -70,36 +76,39 @@ const confirmDelete = (id, name) => {
                     class="bg-orange-200 hover:bg-orange-300 transition px-2 py-1 uppercase text-xs rounded"
                 >
                     <i class="fas fa-fw fa-plus"></i>
-                    Tambah Kostumer
+                    Tambah Kastamer
                 </Link>
             </div>
         </template>
 
-        <SearchInput class="mb-3" v-model="search" />
+        <SearchInput class="mb-3" v-model="filters.search" />
 
         <div class="bg-white overflow-hidden sm:rounded-lg border">
             <Table>
                 <template #head>
-                    <tr>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Nama
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Kode Costumer
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Nomor Telepon
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Alamat
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Ditambah Pada
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Aksi
-                        </th>
-                    </tr>
+                    <TableHeader
+                        v-model="filters.order"
+                        :items="[
+                            { name: 'Nama', label: 'name', sort: true },
+                            {
+                                name: 'Kode Costumer',
+                                label: 'costumer_code',
+                                sort: true,
+                            },
+                            {
+                                name: 'Nomor Telepon',
+                                label: 'phone_number',
+                                sort: false,
+                            },
+                            { name: 'Alamat', label: 'address', sort: false },
+                            {
+                                name: 'Ditambah pada',
+                                label: 'created_at',
+                                sort: true,
+                            },
+                            { name: 'Aksi', sort: false },
+                        ]"
+                    />
                 </template>
                 <tr v-if="costumers.data.length == 0">
                     <td colspan="6" class="px-4 py-14 text-center">

@@ -13,7 +13,7 @@ class JewelrySeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             Jewelry::factory()->create();
             sleep(0.5);
         }

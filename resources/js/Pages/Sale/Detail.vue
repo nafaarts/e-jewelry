@@ -284,7 +284,7 @@ const confirmDelete = (name) => {
                 </Link>
                 <div class="flex flex-col md:flex-row gap-3">
                     <a :href="route('sales.print', sale.id)" target="_blank">
-                        <SecondaryButton>
+                        <SecondaryButton class="w-full h-full">
                             <i class="fas fa-fw fa-download me-2"></i> Cetak
                             Faktur
                         </SecondaryButton>

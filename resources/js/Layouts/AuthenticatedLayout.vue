@@ -217,7 +217,7 @@ if (page.props.flash.message) {
                         />
                         <SidebarLink
                             :link="route('costumers.index')"
-                            label="Kostumer"
+                            label="Kastamer"
                             icon="users"
                             :active="route().current('costumers*')"
                         />
@@ -260,6 +260,12 @@ if (page.props.flash.message) {
                             label="Perbaikan"
                             icon="refresh"
                             :active="route().current('services*')"
+                        />
+                        <SidebarLink
+                            :link="route('deposits.index')"
+                            label="Titipan"
+                            icon="money-bill-transfer"
+                            :active="route().current('deposits*')"
                         />
                     </ul>
                 </div>
@@ -309,7 +315,7 @@ if (page.props.flash.message) {
 
                 <header v-if="$slots.header">
                     <slot name="header" />
-                    <hr class="my-4" />
+                    <hr class="my-3" />
                 </header>
 
                 <slot />

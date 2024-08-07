@@ -1,16 +1,18 @@
 <?php
 
 use App\Models\Costumer;
+use App\Models\DepositAccount;
 use App\Models\Jewelry;
 use App\Models\Order;
 use App\Models\Sale;
+use App\Models\Service;
 use App\Models\Supplier;
 use App\Models\User;
 
 if (!function_exists('generateItemNumber')) {
     function generateItemNumber($type): string
     {
-        if (!in_array($type, ['jewelry', 'employee', 'costumer', 'supplier'])) {
+        if (!in_array($type, ['jewelry', 'employee', 'costumer', 'supplier', 'deposit-account'])) {
             throw new \InvalidArgumentException('Invalid type', 400);
         }
 
@@ -23,7 +25,7 @@ if (!function_exists('generateItemNumber')) {
 
             case 'employee':
                 $prefix = '2';
-                $lastItem = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->where('role', 'SALES')->first();
+                $lastItem = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->orderBy('id', 'desc')->first();
                 $lastItem = $lastItem ? (int) substr($lastItem->user_code, -3) : 0;
                 break;
 
@@ -39,6 +41,12 @@ if (!function_exists('generateItemNumber')) {
                 $lastItem = $lastItem ? (int) substr($lastItem->supplier_code, -3) : 0;
                 break;
 
+            case 'deposit-account':
+                $prefix = '5';
+                $lastItem = DepositAccount::latest()->first();
+                $lastItem = $lastItem ? (int) substr($lastItem->account_number, -3) : 0;
+                break;
+
             default:
                 $prefix = '0';
                 $lastItem = 0;
@@ -47,8 +55,6 @@ if (!function_exists('generateItemNumber')) {
 
         $date = now()->format('my');
         $lastItem = str_pad($lastItem + 1, 3, '0', STR_PAD_LEFT);
-
-        // dd($lastItem);
 
         return $date . $prefix .  $lastItem;
     }
@@ -75,7 +81,7 @@ if (!function_exists('generateInvoiceNumber')) {
 
             case 'service':
                 $prefix = 'SV';
-                $totalThisMonth = Order::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+                $totalThisMonth = Service::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
                 break;
 
             default:
@@ -102,7 +108,7 @@ if (!function_exists('convertImageToBase64')) {
 }
 
 if (!function_exists('getOrderTable')) {
-    function getOrderTable($order, $defaultColumn, $defaultDirection = 'DESC'): array
+    function getOrderTable($order, $defaultColumn = 'id', $defaultDirection = 'DESC'): array
     {
         $column = $defaultColumn;
         $direction = $defaultDirection;

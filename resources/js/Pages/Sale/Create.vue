@@ -18,6 +18,8 @@ import axiosInstance from "@/utils/AxiosInstance";
 import CurrencyInput from "@/Components/CurrencyInput.vue";
 import PercentCheckbox from "@/Components/PercentCheckbox.vue";
 
+import BarcodeScanner from "@/Components/BarcodeScanner.vue";
+
 const props = defineProps({
     sales: String,
     order: Object,
@@ -31,6 +33,7 @@ const sales = ref(props.sales);
 const costumer = ref({});
 const jewelry_code = ref("");
 const discountPrice = ref(0);
+const showBarcodeScanner = ref(false);
 
 const form = useForm({
     costumer_id: "",
@@ -105,6 +108,17 @@ const onDeleteItem = (jewelry_code) => {
         (total, item) => total + item.sell_price,
         0
     );
+};
+
+const handleBarcodeScanned = (data) => {
+    showBarcodeScanner.value = false;
+
+    jewelry_code.value = data;
+    onAddItem();
+};
+
+const toggleBarcodeScannerModal = () => {
+    showBarcodeScanner.value = !showBarcodeScanner.value;
 };
 
 const onSubmit = () => {
@@ -189,24 +203,45 @@ watch(costumer, (value) => {
             </div>
         </template>
 
+        <Transition name="nested" :duration="550">
+            <div
+                v-if="showBarcodeScanner"
+                @click="toggleBarcodeScannerModal"
+                class="fixed inset-0 flex justify-center items-center bg-black/50 z-50"
+            >
+                <div class="bg-white w-full md:w-[640px] m-2 rounded-sm">
+                    <BarcodeScanner @scan-success="handleBarcodeScanned" />
+                </div>
+            </div>
+        </Transition>
+
         <div class="flex flex-col-reverse md:flex-row gap-6 mb-6">
             <div class="w-full md:w-3/4">
                 <div class="bg-white sm:rounded-lg border p-4 sm:p-8">
                     <div class="space-y-6 mb-8">
-                        <form @submit.prevent="onAddItem">
+                        <form @submit.prevent="onAddItem" class="w-full">
                             <InputLabel
                                 for="jewelry_code"
                                 value="Kode Barang"
                             />
-                            <TextInput
-                                id="jewelry_code"
-                                type="text"
-                                class="mt-1 block w-full"
-                                v-model="jewelry_code"
-                                autocomplete="jewelry_code"
-                                placeholder="Masukan kode barang"
-                                autofocus
-                            />
+                            <div class="flex gap-2 mt-1">
+                                <TextInput
+                                    id="jewelry_code"
+                                    type="text"
+                                    class="block w-full"
+                                    v-model="jewelry_code"
+                                    autocomplete="jewelry_code"
+                                    placeholder="Masukan kode barang"
+                                    autofocus
+                                />
+
+                                <PrimaryButton
+                                    type="button"
+                                    @click="toggleBarcodeScannerModal"
+                                >
+                                    <i class="fas fa-fw fa-camera"></i>
+                                </PrimaryButton>
+                            </div>
                         </form>
 
                         <div
@@ -480,3 +515,16 @@ watch(costumer, (value) => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style>
+.nested-enter-active .inner,
+.nested-leave-active .inner {
+    transition: all 0.3s ease-in-out;
+}
+
+.nested-enter-from .inner,
+.nested-leave-to .inner {
+    transform: translateX(30px);
+    opacity: 0;
+}
+</style>

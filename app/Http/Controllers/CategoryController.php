@@ -12,13 +12,15 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $sorting = getOrderTable($request->order);
+
         return inertia('Category/Index', [
             'categories' => Category::query()
                 ->when($request->input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
-                ->latest()
                 ->withCount('jewelries')
+                ->orderBy($sorting['column'], $sorting['direction'])
                 ->paginate(10)
                 ->appends($request->all()),
             'filters' => $request->only(['search']),

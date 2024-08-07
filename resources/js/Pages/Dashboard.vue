@@ -17,7 +17,6 @@ defineProps({
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Dashboard" />
 
         <template #header>
@@ -26,12 +25,14 @@ defineProps({
             </h2>
         </template>
 
-        <div class="flex flex-col md:flex-row w-full gap-3">
+        <div class="hidden md:flex flex-col md:flex-row w-full gap-3">
             <div class="flex gap-3 w-full md:w-1/2">
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Barang">
                     <div class="flex gap-1 items-end">
                         <h4 class="text-2xl">{{ soldJewelriesCount }}</h4>
-                        <span class="text-gray-400">/ {{ jewelriesCount }}</span>
+                        <span class="text-gray-400"
+                            >/ {{ jewelriesCount }}</span
+                        >
                     </div>
                 </Card>
                 <Card class="w-full md:w-1/2 mb-3" label="Jumlah Supplier">
@@ -48,96 +49,31 @@ defineProps({
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-3">
-            <div class="w-full md:w-1/2">
-                <div class="flex flex-col">
-                    <!-- <Card class="mb-3">
-                        <PriceChart />
-                    </Card>
-                    <Card label="Harga Emas" line="true">
-                        <template #action>
-                            <Link
-                                :href="route('prices.create')"
-                                class="text-xs text-zinc-400 hover:text-orange-500 animate-pulse hover:underline transition-all"
-                            >
-                                <i class="fas fa-fw fa-refresh"></i>
-                                Update Harga
-                            </Link>
-                        </template>
-                        <div class="flex justify-between items-center mb-1">
-                            <h5>
-                                <i
-                                    class="fa-solid fa-circle-chevron-up text-green-400"
-                                ></i>
-                                Jual :
-                            </h5>
-                            <p>
-                                <strong>{{
-                                    currencyFormatter.format(latest_price.sell)
-                                }}</strong>
-                            </p>
-                        </div>
-                        <div class="flex justify-between items-center mb-1">
-                            <h5>
-                                <i
-                                    class="fa-solid fa-circle-dot text-gray-400"
-                                ></i>
-                                Netral :
-                            </h5>
-                            <p>
-                                <strong>{{
-                                    currencyFormatter.format(
-                                        latest_price.neutral
-                                    )
-                                }}</strong>
-                            </p>
-                        </div>
-                        <div class="flex justify-between items-center mb-2">
-                            <h5>
-                                <i
-                                    class="fa-solid fa-circle-chevron-down text-blue-400"
-                                ></i>
-                                Beli :
-                            </h5>
-                            <p>
-                                <strong>{{
-                                    currencyFormatter.format(latest_price.buy)
-                                }}</strong>
-                            </p>
-                        </div>
-                        <i class="text-xs text-zinc-400">
-                            Terakhir diperbaharui pada:
-                            <strong
-                                >{{
-                                    moment(latest_price.updated_at).format(
-                                        "DD MMMM YYYY HH:mm"
-                                    )
-                                }}
-                                WIB</strong
-                            >
-                        </i>
-                    </Card> -->
+        <div class="grid grid-cols-2 gap-3 md:hidden">
+            <Link :href="route('sales.create')">
+                <div class="text-center bg-orange-300 p-4 rounded">
+                    <i class="text-4xl fas fa-fw fa-money-bill"></i>
+                    <h3 class="mt-2">Penjualan</h3>
                 </div>
-            </div>
-
-            <!-- <div class="w-full md:w-1/2">
-                <div class="flex gap-3">
-                    <Card class="w-full md:w-1/2 mb-3" label="Penjualan">
-                        <h4 class="text-2xl">59</h4>
-                    </Card>
-                    <Card class="w-full md:w-1/2 mb-3" label="Service">
-                        <h4 class="text-2xl">59</h4>
-                    </Card>
+            </Link>
+            <Link :href="route('orders.create')">
+                <div class="text-center bg-orange-300 p-4 rounded">
+                    <i class="text-4xl fas fa-fw fa-hammer"></i>
+                    <h3 class="mt-2">Tempahan</h3>
                 </div>
-                <div class="flex gap-3">
-                    <Card class="w-full md:w-1/2 mb-3" label="Titip">
-                        <h4 class="text-2xl">59</h4>
-                    </Card>
-                    <Card class="w-full md:w-1/2 mb-3" label="Tempahan">
-                        <h4 class="text-2xl">59</h4>
-                    </Card>
+            </Link>
+            <Link :href="route('services.create')">
+                <div class="text-center bg-orange-300 p-4 rounded">
+                    <i class="text-4xl fas fa-fw fa-refresh"></i>
+                    <h3 class="mt-2">Perbaikan</h3>
                 </div>
-            </div> -->
+            </Link>
+            <Link :href="route('deposits.index')">
+                <div class="text-center bg-orange-300 p-4 rounded">
+                    <i class="text-4xl fas fa-fw fa-money-bill-transfer"></i>
+                    <h3 class="mt-2">Titipan</h3>
+                </div>
+            </Link>
         </div>
     </AuthenticatedLayout>
 </template>

@@ -1,13 +1,19 @@
 <template>
-    <div class="bg-white overflow-hidden sm:rounded-lg p-5 border">
+    <div
+        class="overflow-hidden sm:rounded-lg p-5 border"
+        :class="{
+            'bg-orange-200': variant === 'primary',
+            'bg-white': variant === 'white',
+        }"
+    >
         <div class="flex justify-between items-center">
-            <label
+            <span
                 v-if="label"
-                class="inline-block text-sm text-zinc-400"
-                :class="{ 'mb-3': !line }"
+                class="inline-block text-sm"
+                :class="{ 'mb-3': !line, 'text-zinc-400': variant === 'white' }"
             >
                 {{ label }}
-            </label>
+            </span>
             <div v-if="$slots.action"><slot name="action" /></div>
         </div>
         <hr v-if="line" class="my-3" />
@@ -17,6 +23,19 @@
 
 <script>
 export default {
-    props: ["label", "line"],
+    // props: [
+    //     "label",
+    //     "line"
+
+    // ],\
+    props: {
+        label: String,
+        line: String,
+        variant: {
+            Type: String,
+            required: false,
+            default: "white",
+        },
+    },
 };
 </script>

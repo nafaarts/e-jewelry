@@ -55,6 +55,10 @@ class Jewelry extends Model
 
     public function getSellPriceAttribute(): float
     {
+        if ($this->price()->doesntExist()) {
+            return 0;
+        }
+
         $totalPrice     =  ($this->weight / $this->price->weight) * ($this->price->sell_price + $this->price->cost);
         $costInPercent  =  $totalPrice * $this->cost / 100;
         $totalPrice     += $this->is_percent_cost ? $costInPercent : $this->cost;
@@ -64,6 +68,10 @@ class Jewelry extends Model
 
     public function getBuyPriceAttribute(): float
     {
+        if ($this->price()->doesntExist()) {
+            return 0;
+        }
+
         $totalPrice     = ($this->weight / $this->price->weight) * $this->price->buy_price;
         // if cost not required, remove here!
         $costInPercent  =  $totalPrice * $this->cost / 100;

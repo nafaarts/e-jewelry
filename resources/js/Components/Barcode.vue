@@ -11,10 +11,10 @@ defineProps({
         :value="value"
         :options="{
             width: 0.8,
-            height: 20,
+            height: 22,
             format: 'CODE128',
             displayValue: true,
-            fontSize: 8,
+            fontSize: 10,
             margin: 2,
             lineColor: '#000',
         }"

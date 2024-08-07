@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CostumerController;
+use App\Http\Controllers\DepositController;
+use App\Http\Controllers\DepositTransactionController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JewelryController;
 use App\Http\Controllers\LabelGeneratorController;
@@ -19,7 +21,6 @@ use App\Models\Costumer;
 use App\Models\Jewelry;
 use App\Models\Supplier;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -71,6 +72,17 @@ Route::middleware('auth')->group(function () {
     // Orders
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/print', [OrderController::class, 'print'])->name('orders.print');
+
+    // Deposit
+    Route::resource('deposits', DepositController::class)->parameter('deposits', 'deposit_account')->except(['edit']);
+
+    Route::resource('deposits.transactions', DepositTransactionController::class)->parameters([
+        'deposits' => 'deposit_account'
+    ])->only(['create', 'store', 'show', 'update', 'destroy']);
+
+
+    Route::get('deposits/{deposit_account}/transactions/{transaction}/print', [DepositTransactionController::class, 'print'])
+        ->name('deposits.transactions.print');
 
     // Admin
     Route::middleware('can:ADMIN')->group(function () {

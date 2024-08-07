@@ -175,7 +175,8 @@ const confirmDelete = (id, name) => {
                     <td class="px-4 py-2">
                         <p class="w-fit max-w-56 truncate">
                             {{
-                                `${jewelry.price.carat} (${jewelry.price.rate}%)`
+                                `${jewelry.price?.carat ?? "-"} 
+                                (${jewelry.price?.rate ?? "0"}%)`
                             }}
                         </p>
                     </td>

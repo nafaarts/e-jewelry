@@ -4,7 +4,7 @@ import Table from "@/Components/Table.vue";
 import Pagination from "@/Components/Pagination.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import { router } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, watch } from "vue";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
@@ -12,18 +12,24 @@ import Swal from "sweetalert2";
 import SwalConfig from "@/utils/sweetalert.conf";
 
 import { currencyFormatter } from "@/utils/currencyFormatter";
+import TableHeader from "@/Components/TableHeader.vue";
 
 let props = defineProps({
     prices: Object,
     filters: Object,
 });
 
-let search = ref(props.filters?.search || "");
+const filters = reactive({
+    search: props.filters?.search ?? "",
+    order: props.filters?.order ?? "",
+});
 
 watch(
-    search,
+    filters,
     debounce(function (value) {
-        let data = value === "" ? {} : { search: value };
+        const data = ["search", "order"].reduce((acc, key) => {
+            return value[key] ? { ...acc, [key]: value[key] } : acc;
+        }, {});
         router.get(route("prices.index"), data, {
             preserveState: true,
             replace: true,
@@ -76,34 +82,39 @@ const confirmDelete = (id, date) => {
             </div>
         </template>
 
-        <SearchInput class="mb-3" v-model="search" />
+        <SearchInput class="mb-3" v-model="filters.search" />
 
         <div class="bg-white overflow-hidden sm:rounded-lg border">
             <Table>
                 <template #head>
-                    <tr>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Karat
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Harga Jual
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Harga Beli
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Jumlah barang
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Kategori
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Terakhir diubah
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Aksi
-                        </th>
-                    </tr>
+                    <TableHeader
+                        v-model="filters.order"
+                        :items="[
+                            { name: 'Karat', label: 'name', sort: true },
+                            {
+                                name: 'Harga Jual',
+                                label: 'sell_price',
+                                sort: true,
+                            },
+                            {
+                                name: 'Harga Beli',
+                                label: 'buy_price',
+                                sort: true,
+                            },
+                            {
+                                name: 'Jumlah barang',
+                                label: 'jewelries_count',
+                                sort: true,
+                            },
+                            { name: 'Kategori', label: 'category', sort: true },
+                            {
+                                name: 'Terakhir diubah',
+                                label: 'updated_at',
+                                sort: true,
+                            },
+                            { name: 'Aksi', label: 'action', sort: false },
+                        ]"
+                    />
                 </template>
                 <tr v-if="prices.data.length == 0">
                     <td colspan="7" class="px-4 py-14 text-center">

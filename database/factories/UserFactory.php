@@ -18,9 +18,8 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $employeeCode =  time() . str_pad(User::latest()->first()?->id + 1, 4, '0', STR_PAD_LEFT);
         return [
-            'user_code' => $employeeCode,
+            'user_code' => generateItemNumber('employee'),
             'name' => fake()->name(),
             'indentity_number' => fake()->randomNumber(),
             'email' => fake()->unique()->safeEmail(),

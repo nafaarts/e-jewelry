@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Price;
 use App\Rules\MaxLines;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Closure;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -64,7 +65,11 @@ class OrderController extends Controller
             'weight' => 'required',
             'cost' => 'nullable',
             'total_price' => 'required',
-            'paid_amount' => 'required',
+            'paid_amount' =>  ['required',  function (string $attribute, mixed $value, Closure $fail) use ($request) {
+                if (str($request->paid_amount)->replace(',', '')->toInteger() > str($request->total_price)->replace(',', '')->toInteger()) {
+                    $fail("Jumlah dibayar tidak boleh lebih banyak dari total harga.");
+                }
+            }],
             'estimated_date' => 'required',
             'status' => 'required',
             'remarks' => ['nullable', 'max:255', new MaxLines(10)],

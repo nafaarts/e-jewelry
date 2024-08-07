@@ -4,24 +4,30 @@ import Table from "@/Components/Table.vue";
 import Pagination from "@/Components/Pagination.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import { router } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, watch } from "vue";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
 import Swal from "sweetalert2";
 import SwalConfig from "@/utils/sweetalert.conf";
+import TableHeader from "@/Components/TableHeader.vue";
 
 let props = defineProps({
     safeboxes: Object,
     filters: Object,
 });
 
-let search = ref(props.filters?.search || "");
+const filters = reactive({
+    search: props.filters?.search ?? "",
+    order: props.filters?.order ?? "",
+});
 
 watch(
-    search,
+    filters,
     debounce(function (value) {
-        let data = value === "" ? {} : { search: value };
+        const data = ["search", "order"].reduce((acc, key) => {
+            return value[key] ? { ...acc, [key]: value[key] } : acc;
+        }, {});
         router.get(route("safeboxes.index"), data, {
             preserveState: true,
             replace: true,
@@ -74,25 +80,24 @@ const confirmDelete = (id, name) => {
             </div>
         </template>
 
-        <SearchInput class="mb-3" v-model="search" />
+        <SearchInput class="mb-3" v-model="filters.search" />
 
         <div class="bg-white overflow-hidden sm:rounded-lg border">
             <Table>
                 <template #head>
-                    <tr>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Nama
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Catatan
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Ditambah Pada
-                        </th>
-                        <th scope="col" class="px-4 py-3 whitespace-nowrap">
-                            Aksi
-                        </th>
-                    </tr>
+                    <TableHeader
+                        v-model="filters.order"
+                        :items="[
+                            { name: 'Nama', label: 'name', sort: true },
+                            { name: 'Catatan', label: 'remarks', sort: false },
+                            {
+                                name: 'Ditambah Pada',
+                                label: 'created_at',
+                                sort: true,
+                            },
+                            { name: 'Aksi', label: 'action', sort: false },
+                        ]"
+                    />
                 </template>
                 <tr v-if="safeboxes.data.length == 0">
                     <td colspan="6" class="px-4 py-14 text-center">

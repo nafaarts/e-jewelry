@@ -18,7 +18,8 @@ export default {
                     class="px-3 py-2 leading-tight border"
                     :class="{
                         'bg-gray-100 cursor-not-allowed': !link.url,
-                        'hover:bg-gray-100 hover:text-gray-700': link.url,
+                        ' bg-white hover:bg-gray-100 hover:text-gray-700':
+                            link.url,
                         'text-orange-600 border-orange-300 bg-orange-50 hover:bg-orange-100 hover:text-orange-700':
                             link.active,
                         'text-gray-500': !link.active,

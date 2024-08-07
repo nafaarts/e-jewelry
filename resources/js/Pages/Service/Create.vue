@@ -18,10 +18,10 @@ import status from "@/Constant/ServiceStatus";
 const props = defineProps({
     sales: String,
     categories: Array,
-})
+});
 
-const sales = ref(props.sales)
-const costumer = ref({})
+const sales = ref(props.sales);
+const costumer = ref({});
 const form = useForm({
     category_id: "",
     costumer_id: "",
@@ -46,12 +46,11 @@ const onSubmit = () => {
     });
 };
 
-watch(costumer, (value) => form.costumer_id = value.id)
+watch(costumer, (value) => (form.costumer_id = value.id));
 </script>
 
 <template>
     <AuthenticatedLayout>
-
         <Head title="Tambah Perbaikan" />
 
         <template #header>
@@ -65,7 +64,9 @@ watch(costumer, (value) => form.costumer_id = value.id)
         <form @submit.prevent="onSubmit" class="space-y-6">
             <div class="flex flex-col-reverse md:flex-row gap-6">
                 <div class="w-full md:w-3/4">
-                    <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-6">
+                    <div
+                        class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-6"
+                    >
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
@@ -74,25 +75,42 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                         <option value="">
                                             - Pilih status -
                                         </option>
-                                        <option v-for="(item, index) in status" :key="index" :value="item">
+                                        <option
+                                            v-for="(item, index) in status"
+                                            :key="index"
+                                            :value="item"
+                                        >
                                             {{ item }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.status" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.status"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="category_id" value="Kategori" />
+                                    <InputLabel
+                                        for="category_id"
+                                        value="Kategori"
+                                    />
                                     <Select v-model="form.category_id">
                                         <option value="">
                                             - Pilih kategori -
                                         </option>
-                                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                                        <option
+                                            v-for="category in categories"
+                                            :key="category.id"
+                                            :value="category.id"
+                                        >
                                             {{ category.name }}
                                         </option>
                                     </Select>
-                                    <InputError class="mt-2" :message="form.errors.category_id" />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.category_id"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -100,18 +118,39 @@ watch(costumer, (value) => form.costumer_id = value.id)
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="weight" value="Berat (gram)" />
-                                    <TextInput id="weight" type="number" step="0.01" class="mt-1 block w-full"
-                                        v-model="form.weight" autocomplete="weight" placeholder="Masukan berat perhiasan" />
-                                    <InputError class="mt-2" :message="form.errors.weight" />
+                                    <InputLabel
+                                        for="weight"
+                                        value="Berat (gram)"
+                                    />
+                                    <TextInput
+                                        id="weight"
+                                        type="number"
+                                        step="0.01"
+                                        class="mt-1 block w-full"
+                                        v-model="form.weight"
+                                        autocomplete="weight"
+                                        placeholder="Masukan berat perhiasan"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.weight"
+                                    />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
                                     <InputLabel for="cost" value="Biaya" />
-                                    <CurrencyInput id="cost" class="mt-1 block w-full" v-model="form.cost"
-                                        autocomplete="cost" placeholder="Masukan total biaya" />
-                                    <InputError class="mt-2" :message="form.errors.cost" />
+                                    <CurrencyInput
+                                        id="cost"
+                                        class="mt-1 block w-full"
+                                        v-model="form.cost"
+                                        autocomplete="cost"
+                                        placeholder="Masukan total biaya"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.cost"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -119,30 +158,60 @@ watch(costumer, (value) => form.costumer_id = value.id)
                         <div class="flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="paid_amount" value="Jumlah Dibayarkan" />
-                                    <CurrencyInput id="paid_amount" type="paid_amount" class="mt-1 block w-full"
-                                        v-model="form.paid_amount" autocomplete="paid_amount"
-                                        placeholder="Masukan jumlah dibayarkan" />
-                                    <InputError class="mt-2" :message="form.errors.paid_amount" />
+                                    <InputLabel
+                                        for="paid_amount"
+                                        value="Jumlah Dibayarkan"
+                                    />
+                                    <CurrencyInput
+                                        id="paid_amount"
+                                        type="paid_amount"
+                                        class="mt-1 block w-full"
+                                        v-model="form.paid_amount"
+                                        autocomplete="paid_amount"
+                                        placeholder="Masukan jumlah dibayarkan"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.paid_amount"
+                                    />
                                 </div>
                             </div>
 
                             <div class="w-full md:w-1/2 space-y-6">
                                 <div>
-                                    <InputLabel for="estimated_date" value="Estimasi Tanggal Selesai" />
-                                    <TextInput id="estimated_date" type="date" class="mt-1 block w-full"
-                                        v-model="form.estimated_date" autocomplete="estimated_date"
-                                        placeholder="Masukan Estimasi Tanggal Selesai" />
-                                    <InputError class="mt-2" :message="form.errors.estimated_date" />
+                                    <InputLabel
+                                        for="estimated_date"
+                                        value="Estimasi Tanggal Selesai"
+                                    />
+                                    <TextInput
+                                        id="estimated_date"
+                                        type="date"
+                                        class="mt-1 block w-full"
+                                        v-model="form.estimated_date"
+                                        autocomplete="estimated_date"
+                                        placeholder="Masukan Estimasi Tanggal Selesai"
+                                    />
+                                    <InputError
+                                        class="mt-2"
+                                        :message="form.errors.estimated_date"
+                                    />
                                 </div>
                             </div>
                         </div>
 
                         <div>
                             <InputLabel for="remarks" value="Catatan" />
-                            <TextareaInput id="remarks" name="remarks" rows="6" v-model="form.remarks"
-                                placeholder="Tinggalkan catatan..." />
-                            <InputError class="mt-2" :message="form.errors.remarks" />
+                            <TextareaInput
+                                id="remarks"
+                                name="remarks"
+                                rows="6"
+                                v-model="form.remarks"
+                                placeholder="Tinggalkan catatan..."
+                            />
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.remarks"
+                            />
                         </div>
 
                         <div class="flex items-center gap-2">
@@ -150,28 +219,40 @@ watch(costumer, (value) => form.costumer_id = value.id)
                                 Simpan
                             </PrimaryButton>
                             <Link :href="route('services.index')">
-                            <SecondaryButton type="reset" :disabled="form.processing">
-                                Kembali
-                            </SecondaryButton>
+                                <SecondaryButton
+                                    type="reset"
+                                    :disabled="form.processing"
+                                >
+                                    Kembali
+                                </SecondaryButton>
                             </Link>
                         </div>
                     </div>
                 </div>
 
                 <div class="w-full md:w-1/4">
-                    <div class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-6">
+                    <div
+                        class="bg-white overflow-hidden sm:rounded-lg border p-4 sm:p-8 space-y-6"
+                    >
                         <div>
                             <InputLabel for="pramuniaga" value="Pramuniaga" />
-                            <TextInput id="pramuniaga" class="mt-1 block w-full bg-gray-200" v-model="sales" disabled />
+                            <TextInput
+                                id="pramuniaga"
+                                class="mt-1 block w-full bg-gray-200"
+                                v-model="sales"
+                                disabled
+                            />
                         </div>
                         <div>
                             <SelectCostumer v-model="costumer" />
-                            <InputError class="mt-2" :message="form.errors.costumer_id" />
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.costumer_id"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-
     </AuthenticatedLayout>
 </template>

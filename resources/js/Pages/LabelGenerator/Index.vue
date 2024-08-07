@@ -25,15 +25,25 @@ let filters = reactive({
 });
 
 const printArea = ref(null);
-const selectedItems = ref([]);
+const selectedItems = ref(
+    JSON.parse(localStorage.getItem("label-items") ?? "[]")
+);
 
 const selectItem = (jewelry) => {
     if (selectedItems.value.some((item) => item.id === jewelry.id)) {
-        selectedItems.value = selectedItems.value.filter(
+        const data = selectedItems.value.filter(
             (item) => item.id !== jewelry.id
         );
+
+        localStorage.setItem("label-items", JSON.stringify(data));
+        selectedItems.value = data;
         return;
     }
+
+    localStorage.setItem(
+        "label-items",
+        JSON.stringify([...selectedItems.value, jewelry])
+    );
 
     selectedItems.value.push(jewelry);
 };
@@ -62,13 +72,64 @@ const getSelected = () => {
 };
 
 const resetSelected = () => {
+    localStorage.removeItem("label-items");
     selectedItems.value = [];
 };
 
 const print = () => {
     let previewWindow = window.open("", "MsgWindow", "width=800,height=600");
 
-    let content = `<style>*{padding:0;margin:0;box-sizing:border-box}.label-container{width:80mm;height:24mm;margin-bottom:10px;display:flex;justify-content:space-between}.label-container .label{width:20mm;height:100%;background:#fff}.label-container .label .label-barcode{width:100%;height:50%;display:flex;justify-content:center;align-items:center;border-bottom:1px dotted gray}.label-container .label .label-detail{width:100%;height:50%;font-size:7px!important;line-height:9px!important;padding:3px 10px}.label-container .label .label-detail p{margin-bottom:2px!important;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}</style>${printArea.value.innerHTML}`;
+    let content = `
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box
+    }
+
+    .label-container {
+        width: 77mm;
+        height: 24mm;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between
+    }
+
+    .label-container .label {
+        width: 20mm;
+        padding: 0.25mm;
+        height: 100%;
+        background: #fff
+    }
+
+    .label-container .label .label-barcode {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px dotted gray
+    }
+
+    .label-container .label .label-detail {
+        width: 100%;
+        height: 50%;
+        font-size: 8px !important;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 10px !important;
+        padding: 5px 10px;
+    }
+
+    .label-container .label .label-detail p {
+        margin-bottom: 2px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    </style>
+    ${printArea.value.innerHTML}`;
 
     previewWindow.document.write(content);
     previewWindow.print();
@@ -248,6 +309,7 @@ watch(
                         <div
                             ref="printArea"
                             class="flex flex-col justify-start items-center gap-3 h-[600px] bg-zinc-100 p-3 overflow-y-auto no-scrollbar"
+                            v-if="getSelected().length > 0"
                         >
                             <div
                                 v-for="(jewelries, index) in getSelected()"
@@ -256,7 +318,7 @@ watch(
                             >
                                 <div v-for="jewelry in jewelries" class="label">
                                     <div class="label-barcode">
-                                        <Barcode value="081333" />
+                                        <Barcode :value="jewelry.barcode" />
                                     </div>
                                     <div class="label-detail">
                                         <p v-text="jewelry.name" />
@@ -264,6 +326,21 @@ watch(
                                         <p v-text="jewelry.carat" />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div
+                            v-else
+                            class="flex justify-center items-center h-[600px] bg-zinc-100"
+                        >
+                            <div class="text-gray-500 text-center">
+                                <p class="mb-1">Tidak ada data!</p>
+                                <small>
+                                    Pilih barang terlebih dahulu untuk
+                                    <span class="underline">
+                                        mencetak label
+                                    </span>
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -290,8 +367,9 @@ watch(
 }
 
 .label-container {
-    width: 80mm;
+    width: 77mm;
     height: 24mm;
+    padding: 1mm;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
@@ -299,6 +377,7 @@ watch(
 
 .label-container .label {
     width: 20mm;
+    padding: 0.25mm;
     height: 100%;
     background: #fff;
 }
@@ -315,9 +394,12 @@ watch(
 .label-container .label .label-detail {
     width: 100%;
     height: 50%;
-    font-size: 7px !important;
+    font-size: 8px !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 10px !important;
-    padding: 3px 10px;
+    padding: 5px 10px;
 }
 
 .label-container .label .label-detail p {

@@ -40,6 +40,10 @@ class InvoiceController extends Controller
                 $this->update($request, 'sale');
                 break;
 
+            case 'deposit_invoice':
+                $this->update($request, 'deposit');
+                break;
+
             default:
                 break;
         }
