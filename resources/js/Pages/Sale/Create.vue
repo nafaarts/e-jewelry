@@ -238,6 +238,7 @@ watch(costumer, (value) => {
                                 <PrimaryButton
                                     type="button"
                                     @click="toggleBarcodeScannerModal"
+                                    class="block md:hidden"
                                 >
                                     <i class="fas fa-fw fa-camera"></i>
                                 </PrimaryButton>

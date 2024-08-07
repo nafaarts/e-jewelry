@@ -108,7 +108,6 @@ const print = () => {
         display: flex;
         justify-content: center;
         align-items: center;
-        border-bottom: 1px dotted gray
     }
 
     .label-container .label .label-detail {
