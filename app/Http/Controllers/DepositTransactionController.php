@@ -32,20 +32,19 @@ class DepositTransactionController extends Controller
      */
     public function store(Request $request, DepositAccount $deposit_account)
     {
-        dd($deposit_account?->moneyBalance, $deposit_account?->goldBalance);
 
         $validated = $request->validate([
             'type' => 'required|in:DEBIT,CREDIT',
             'category' => 'required|in:MONEY,GOLD',
             'weight' => [Rule::requiredIf($request->category == 'GOLD'), function (string $attribute, mixed $value, Closure $fail) use ($request, $deposit_account) {
-                if ($request->type == 'DEBIT' && $value > $deposit_account?->goldBalance()) {
+                if ($request->type == 'DEBIT' && $value > $deposit_account?->goldBalance) {
                     $fail("Jumlah berat tidak cukup.");
                 }
             }],
             'amount' => [Rule::requiredIf($request->category == 'MONEY'),  function (string $attribute, mixed $value, Closure $fail) use ($request, $deposit_account) {
                 dd((int) str($value)->replace(',', ''), $value);
                 
-                if ($request->type == 'DEBIT' && (int) str($value)->replace(',', '') > $deposit_account?->moneyBalance()) {
+                if ($request->type == 'DEBIT' && str($value)->replace(',', '')->toInteger() > $deposit_account?->moneyBalance) {
                     $fail("Jumlah saldo tidak cukup.");
                 }
             }],
