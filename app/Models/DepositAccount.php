@@ -31,7 +31,7 @@ class DepositAccount extends Model
         return $this->hasMany(DepositTransaction::class);
     }
 
-    protected function goldBalance(): Attribute
+    public function goldBalance(): Attribute
     {
         return Attribute::make(
             get: function () {
@@ -45,7 +45,7 @@ class DepositAccount extends Model
         );
     }
 
-    protected function moneyBalance(): Attribute
+    public function moneyBalance(): Attribute
     {
         return Attribute::make(
             get: function () {
