@@ -32,6 +32,8 @@ class DepositTransactionController extends Controller
      */
     public function store(Request $request, DepositAccount $deposit_account)
     {
+        dd($deposit_account->goldBalance(), $deposit_account->moneyBalance());
+        
         $validated = $request->validate([
             'type' => 'required|in:DEBIT,CREDIT',
             'category' => 'required|in:MONEY,GOLD',
