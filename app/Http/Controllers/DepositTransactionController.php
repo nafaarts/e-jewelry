@@ -42,8 +42,6 @@ class DepositTransactionController extends Controller
                 }
             }],
             'amount' => [Rule::requiredIf($request->category == 'MONEY'),  function (string $attribute, mixed $value, Closure $fail) use ($request, $deposit_account) {
-                dd((int) str($value)->replace(',', ''), $value);
-                
                 if ($request->type == 'DEBIT' && str($value)->replace(',', '')->toInteger() > $deposit_account?->moneyBalance) {
                     $fail("Jumlah saldo tidak cukup.");
                 }
