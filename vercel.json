@@ -13,7 +13,7 @@
     "outputDirectory": "public",
     "env": {
         "APP_NAME": "E-Jewelry (Staging)",
-        "APP_ENV": "development",
+        "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "https://e-jewelry-xi.vercel.app",
         "ASSET_URL": "https://e-jewelry-xi.vercel.app",
