@@ -19,6 +19,7 @@
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "https://binanusa.vercel.app",
+        "APP_KEY": "base64:T6l1R7aWoUQLzLjb2P6uzRG/48n9Lg+QDvKjO1ytXrI=",
         "VERCEL_DEMO_MODE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
