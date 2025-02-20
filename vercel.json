@@ -15,7 +15,7 @@
         "APP_NAME": "E-Jewelry (Staging)",
         "APP_ENV": "production",
         "APP_DEBUG": "true",
-        "APP_URL": "e-jewelry-xi.vercel.app",
+        "APP_URL": "https://e-jewelry-xi.vercel.app",
         "APP_KEY": "base64:T6l1R7aWoUQLzLjb2P6uzRG/48n9Lg+QDvKjO1ytXrI=",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
