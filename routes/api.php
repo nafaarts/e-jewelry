@@ -21,57 +21,57 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+});
 
-    Route::get('/costumer', function (Request $request) {
-        return $request->input('search') ? Costumer::query()
-            ->when($request->input('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('costumer_code', 'like', "%{$search}%")
-                    ->orWhere('indentity_number', 'like', "%{$search}%")
-                    ->orWhere('phone_number', 'like', "%{$search}%")
-                    ->orWhere('address', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->limit(3)
-            ->get() : [];
-    });
+Route::get('/costumer', function (Request $request) {
+    return $request->input('search') ? Costumer::query()
+        ->when($request->input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('costumer_code', 'like', "%{$search}%")
+                ->orWhere('indentity_number', 'like', "%{$search}%")
+                ->orWhere('phone_number', 'like', "%{$search}%")
+                ->orWhere('address', 'like', "%{$search}%");
+        })
+        ->latest()
+        ->limit(3)
+        ->get() : [];
+});
 
-    Route::post('/costumer/store', function (Request $request) {
-        $validated = $request->validate([
-            'name' => 'required',
-            'phone_number' => 'required|numeric|unique:' . Costumer::class,
-            'address' => 'required'
-        ]);
+Route::post('/costumer/store', function (Request $request) {
+    $validated = $request->validate([
+        'name' => 'required',
+        'phone_number' => 'required|numeric|unique:' . Costumer::class,
+        'address' => 'required'
+    ]);
 
-        $validated['costumer_code'] = generateItemNumber('costumer');
+    $validated['costumer_code'] = generateItemNumber('costumer');
 
-        return Costumer::create($validated);
-    });
+    return Costumer::create($validated);
+});
 
-    Route::get('/jewelry', function (Request $request) {
-        $jewelry = Jewelry::where('jewelry_code', $request->code)->where('status', 'READY')->first();
+Route::get('/jewelry', function (Request $request) {
+    $jewelry = Jewelry::where('jewelry_code', $request->code)->where('status', 'READY')->first();
 
-        if (!$jewelry) {
-            return response()->json([
-                'message' => 'Not Found',
-            ], 404);
-        }
-
+    if (!$jewelry) {
         return response()->json([
-            'message' => 'success',
-            'data' => [
-                'id' => $jewelry->id,
-                'jewelry_code' => $jewelry->jewelry_code,
-                'name' => $jewelry->name,
-                'weight' => $jewelry->weight,
-                'price' => [
-                    'category' => $jewelry->price->category,
-                    'carat' => $jewelry->price->carat,
-                    'rate' => $jewelry->price->rate,
-                ],
-                'sell_price' => $jewelry->sell_price,
-                'photo' => $jewelry->photo
-            ]
-        ]);
-    });
+            'message' => 'Not Found',
+        ], 404);
+    }
+
+    return response()->json([
+        'message' => 'success',
+        'data' => [
+            'id' => $jewelry->id,
+            'jewelry_code' => $jewelry->jewelry_code,
+            'name' => $jewelry->name,
+            'weight' => $jewelry->weight,
+            'price' => [
+                'category' => $jewelry->price->category,
+                'carat' => $jewelry->price->carat,
+                'rate' => $jewelry->price->rate,
+            ],
+            'sell_price' => $jewelry->sell_price,
+            'photo' => $jewelry->photo
+        ]
+    ]);
 });
