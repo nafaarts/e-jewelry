@@ -1,5 +1,0 @@
-/vendor
-docker-compose.yml
-Dockerfile
-entrypoint.sh
-nginx.conf
