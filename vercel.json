@@ -1,7 +1,7 @@
 {
     "version": 2,
     "builds": [
-        { "src": "/api/index.php", "use": "vercel-php@0.4.4" },
+        { "src": "/api/index.php", "use": "vercel-php@0.6.2" },
         { "src": "/public/**", "use": "@vercel/static" }
     ],
     "routes": [
@@ -30,6 +30,10 @@
         "SESSION_DRIVER": "array",
         "VIEW_COMPILED_PATH": "/tmp/views",
         "SSR_TEMP_PATH": "/tmp/ssr",
-        "NODE_PATH": "node"
+        "NODE_PATH": "node",
+        "DB_HOST": "w1fe6.h.filess.io",
+        "DB_PORT": "3307",
+        "DB_DATABASE": "ejewelry_rodgreatso",
+        "DB_USERNAME": "ejewelry_rodgreatso"
     }
 }
