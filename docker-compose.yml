@@ -16,23 +16,23 @@ services:
       - "9000:9000"
     volumes:
       - .:/var/www/html:delegated
-    depends_on:
-      - database
+#    depends_on:
+#      - database
     networks:
       - tokomas
 
-  database:
-    image: mariadb:10.6
-    restart: unless-stopped
-    tty: true
-    ports:
-      - 3306:3306
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-    networks:
-      - tokomas
+#  database:
+#    image: mariadb:10.6
+#    restart: unless-stopped
+#    tty: true
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - ./mysql:/var/lib/mysql
+#    environment:
+#      MYSQL_DATABASE: ${DB_DATABASE}
+#      MYSQL_USER: ${DB_USERNAME}
+#      MYSQL_PASSWORD: ${DB_PASSWORD}
+#      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+#    networks:
+#      - tokomas
