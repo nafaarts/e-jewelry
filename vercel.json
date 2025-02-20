@@ -1,37 +1,32 @@
 {
     "version": 2,
-    "builds": [
-        { "src": "/api/index.php", "use": "vercel-php@0.5.4" },
-        { "src": "/public/**", "use": "@vercel/static" }
-    ],
+    "framework": null,
+    "functions": {
+        "api/index.php": { "runtime": "vercel-php@0.6.0" }
+    },
     "routes": [
-        {
-            "src": "/(css|js)/(.*)",
-            "dest": "public/$1/$2"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/api/index.php"
-        }
+        { "src": "/build/(.*)", "dest": "/public/build/" },
+        { "src": "/(.*)", "dest": "/api/index.php" }
     ],
+    "public": true,
+    "buildCommand": "vite build",
+    "outputDirectory": "public",
     "env": {
         "APP_NAME": "E-Jewelry (Staging)",
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "https://binanusa.vercel.app",
         "APP_KEY": "base64:T6l1R7aWoUQLzLjb2P6uzRG/48n9Lg+QDvKjO1ytXrI=",
-        "VERCEL_DEMO_MODE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
         "APP_ROUTES_CACHE": "/tmp/routes.php",
         "APP_SERVICES_CACHE": "/tmp/services.php",
+        "VIEW_COMPILED_PATH": "/tmp",
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
-        "SESSION_DRIVER": "array",
-        "VIEW_COMPILED_PATH": "/tmp/views",
-        "SSR_TEMP_PATH": "/tmp/ssr",
-        "NODE_PATH": "node",
+        "SESSION_DRIVER": "cookie",
+        "DB_CONNECTION": "mysql",
         "DB_HOST": "w1fe6.h.filess.io",
         "DB_PORT": "3307",
         "DB_DATABASE": "ejewelry_rodgreatso",
