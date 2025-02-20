@@ -1,7 +1,7 @@
 {
     "version": 2,
     "builds": [
-        { "src": "/api/index.php", "use": "vercel-php@0.6.2" },
+        { "src": "/api/index.php", "use": "vercel-php@0.5.4" },
         { "src": "/public/**", "use": "@vercel/static" }
     ],
     "routes": [
@@ -17,7 +17,7 @@
     "env": {
         "APP_NAME": "E-Jewelry (Staging)",
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_DEBUG": "true",
         "APP_URL": "https://binanusa.vercel.app",
         "VERCEL_DEMO_MODE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",
