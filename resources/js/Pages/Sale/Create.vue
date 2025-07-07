@@ -70,13 +70,13 @@ const addItem = (data) => {
         );
 
         jewelry_code.value = "";
-    } else {
-        Swal.fire({
-            title: "Opps",
-            icon: "error",
-            text: "Barang sudah di input!",
-            ...SwalConfig,
-        });
+    // } else {
+    //    Swal.fire({
+    //        title: "Opps",
+    //        icon: "error",
+    //        text: "Barang sudah di input!",
+    //        ...SwalConfig,
+    //    });
     }
 };
 
